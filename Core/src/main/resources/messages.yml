@@ -1,0 +1,7 @@
+report:
+  info:
+    - "&b---------------------------------------------------------"
+    - "&a<reported> &ewas reported by &a<reporter> &ebecause of &c<reason>&e."
+    - "&a<reported> &ehas now &3<reports> &ereports!"
+    - "&b---------------------------------------------------------"
+  comments: "&b<name>: &a<comment>"

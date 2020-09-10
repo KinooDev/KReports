@@ -1,0 +1,4 @@
+name: KReports
+main: com.kino.kreports.KReports
+version: ${project.version}
+author: Kino
