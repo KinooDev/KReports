@@ -34,18 +34,6 @@ public class UserStorageManager implements Storage<UUID, User> {
     }
 
     @Override
-    public Optional<UUID> getKey(User user) {
-
-        Map<User, UUID> map = new HashMap<>();
-
-        for (UUID uuid : users.keySet()) {
-            map.put(users.get(uuid), uuid);
-        }
-
-        return Optional.ofNullable(map.get(user));
-    }
-
-    @Override
     public Optional<User> findFromData(UUID uuid) {
         if (!playerData.contains("users." + uuid.toString())) {
             return Optional.empty();
@@ -54,10 +42,11 @@ public class UserStorageManager implements Storage<UUID, User> {
         Object o = playerData.get("users." + uuid.toString());
 
         if (o instanceof Map) {
-            if (((Map) o).containsKey("staff")) {
-                return Optional.of(new Staff((Map<String, Object>) o));
+            Map<String, Object> map = (Map<String, Object>) o;
+            if (map.containsKey("staff")) {
+                return Optional.of(new Staff(map));
             } else {
-                return Optional.of(new SimpleUser((Map<String, Object>) o));
+                return Optional.of(new SimpleUser(map));
             }
         } else if (o instanceof ConfigurationSection) {
             if(((ConfigurationSection) o).contains("staff")) {
@@ -76,46 +65,6 @@ public class UserStorageManager implements Storage<UUID, User> {
         } else {
             return Optional.empty();
         }
-    }
-
-    @Override
-    public Optional<UUID> getKeyFromData(User user) {
-
-        for (String key : playerData.getConfigurationSection("users").getKeys(false)) {
-
-            Object o = playerData.get("users." + key);
-
-            if (o instanceof Map) {
-                User u;
-                if (((Map) o).containsKey("staff")) {
-                    u = new Staff((Map<String, Object>) o);
-                } else {
-                    u = new SimpleUser((Map<String, Object>) o);
-                }
-                if(u.equals(user)) {
-                    return Optional.of(UUID.fromString(key));
-                } else {
-                    return Optional.empty();
-                }
-            } else if (o instanceof ConfigurationSection) {
-                User u;
-                if(((ConfigurationSection) o).contains("staff")) {
-                    u = new Staff(playerData.getConfigurationSection("users." + key).getValues(false));
-                } else {
-                    u = new SimpleUser(playerData.getConfigurationSection("users." + key).getValues(false));
-                }
-                if(u.equals(user)) {
-                    return Optional.of(UUID.fromString(key));
-                } else {
-                    return Optional.empty();
-                }
-            } else {
-                return Optional.empty();
-            }
-        }
-
-        return Optional.empty();
-
     }
 
     @Override

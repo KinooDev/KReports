@@ -10,27 +10,27 @@ import java.util.Objects;
 public class SimpleUser implements User{
 
 
-    protected Kicks kicks;
-    protected Mutes mutes;
-    protected Warns warns;
-    protected Bans bans;
-    protected Reports reports;
+    protected IntegerStat kicks;
+    protected IntegerStat mutes;
+    protected IntegerStat warns;
+    protected IntegerStat bans;
+    protected IntegerStat reports;
 
 
     public SimpleUser() {
-        kicks = new Kicks();
-        mutes = new Mutes();
-        warns = new Warns();
-        bans = new Bans();
-        reports = new Reports();
+        kicks = new IntegerStat();
+        mutes = new IntegerStat();
+        warns = new IntegerStat();
+        bans = new IntegerStat();
+        reports = new IntegerStat();
     }
 
     public SimpleUser(Map<String, Object> userMap) {
-        kicks = new Kicks((Integer) userMap.get("kicks"));
-        mutes = new Mutes((Integer) userMap.get("mutes"));
-        warns = new Warns((Integer) userMap.get("warns"));
-        bans = new Bans((Integer) userMap.get("bans"));
-        reports = new Reports((Integer) userMap.get("reports"));
+        kicks = new IntegerStat((Integer) userMap.get("kicks"));
+        mutes = new IntegerStat((Integer) userMap.get("mutes"));
+        warns = new IntegerStat((Integer) userMap.get("warns"));
+        bans = new IntegerStat((Integer) userMap.get("bans"));
+        reports = new IntegerStat((Integer) userMap.get("reports"));
     }
 
     @Override

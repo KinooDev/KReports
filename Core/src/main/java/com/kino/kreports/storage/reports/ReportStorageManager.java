@@ -34,18 +34,6 @@ public class ReportStorageManager implements Storage<UUID, Report> {
     }
 
     @Override
-    public Optional<UUID> getKey(Report report) {
-
-        Map<Report, UUID> map = new HashMap<>();
-
-        for (UUID uuid : reports.keySet()) {
-            map.put(reports.get(uuid), uuid);
-        }
-
-        return Optional.ofNullable(map.get(report));
-    }
-
-    @Override
     public Optional<Report> findFromData(UUID uuid) {
         if (!reportsData.contains("reports." + uuid.toString())) {
             return Optional.empty();
@@ -64,37 +52,6 @@ public class ReportStorageManager implements Storage<UUID, Report> {
         } else {
             return Optional.empty();
         }
-    }
-
-    @Override
-    public Optional<UUID> getKeyFromData(Report report) {
-
-        for (String key : reportsData.getConfigurationSection("reports").getKeys(false)) {
-
-            Object o = reportsData.get("users." + key);
-
-            if (o instanceof Map) {
-                Report r = new Report((Map<String, Object>) o);
-                if(r.equals(report)) {
-                    return Optional.of(UUID.fromString(key));
-                } else {
-                    return Optional.empty();
-                }
-            } else if (o instanceof ConfigurationSection) {
-                Report r = new Report(reportsData.getConfigurationSection("reports." + key).getValues(false));
-
-                if(r.equals(report)) {
-                    return Optional.of(UUID.fromString(key));
-                } else {
-                    return Optional.empty();
-                }
-            } else {
-                return Optional.empty();
-            }
-        }
-
-        return Optional.empty();
-
     }
 
     @Override
@@ -136,7 +93,7 @@ public class ReportStorageManager implements Storage<UUID, Report> {
             return;
         }
 
-        reportsData.getConfigurationSection("reports").getKeys(false).forEach(s -> findFromData(UUID.fromString(s)).ifPresent(report -> add(UUID.fromString(s), report)));;
+        reportsData.getConfigurationSection("reports").getKeys(false).forEach(s -> findFromData(UUID.fromString(s)).ifPresent(report -> add(UUID.fromString(s), report)));
 
     }
 

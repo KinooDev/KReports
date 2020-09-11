@@ -2,7 +2,6 @@ package com.kino.kreports.storage.user;
 
 
 import com.kino.kreports.stats.*;
-import com.kino.kreports.stats.staff.*;
 import lombok.Getter;
 
 import java.util.LinkedHashMap;
@@ -13,39 +12,39 @@ import java.util.Objects;
 @SuppressWarnings("unchecked")
 public class Staff extends SimpleUser {
 
-    private KicksStaff kicksStaff;
-    private MutesStaff mutesStaff;
-    private WarnsStaff warnsStaff;
-    private BansStaff bansStaff;
-    private ReportsStaff reportsStaff;
+    private IntegerStat kicksStaff;
+    private IntegerStat mutesStaff;
+    private IntegerStat warnsStaff;
+    private IntegerStat bansStaff;
+    private IntegerStat reportsStaff;
 
     public Staff() {
-        kicks = new Kicks();
-        mutes = new Mutes();
-        warns = new Warns();
-        bans = new Bans();
-        reports = new Reports();
+        kicks = new IntegerStat();
+        mutes = new IntegerStat();
+        warns = new IntegerStat();
+        bans = new IntegerStat();
+        reports = new IntegerStat();
 
-        kicksStaff = new KicksStaff();
-        mutesStaff = new MutesStaff();
-        warnsStaff = new WarnsStaff();
-        bansStaff = new BansStaff();
-        reportsStaff = new ReportsStaff();
+        kicksStaff = new IntegerStat();
+        mutesStaff = new IntegerStat();
+        warnsStaff = new IntegerStat();
+        bansStaff = new IntegerStat();
+        reportsStaff = new IntegerStat();
     }
 
     public Staff(Map<String, Object> userMap) {
-        kicks = new Kicks((Integer) userMap.get("kicks"));
-        mutes = new Mutes((Integer) userMap.get("mutes"));
-        warns = new Warns((Integer) userMap.get("warns"));
-        bans = new Bans((Integer) userMap.get("bans"));
-        reports = new Reports((Integer) userMap.get("reports"));
+        kicks = new IntegerStat((Integer) userMap.get("kicks"));
+        mutes = new IntegerStat((Integer) userMap.get("mutes"));
+        warns = new IntegerStat((Integer) userMap.get("warns"));
+        bans = new IntegerStat((Integer) userMap.get("bans"));
+        reports = new IntegerStat((Integer) userMap.get("reports"));
 
         Map<String, Object> staffMap = (Map<String, Object>) userMap.get("staff");
-        kicksStaff = new KicksStaff((Integer) staffMap.get("kicks"));
-        mutesStaff = new MutesStaff((Integer) staffMap.get("mutes"));
-        warnsStaff = new WarnsStaff((Integer) staffMap.get("warns"));
-        bansStaff = new BansStaff((Integer) staffMap.get("bans"));
-        reportsStaff = new ReportsStaff((Integer) staffMap.get("reports"));
+        kicksStaff = new IntegerStat((Integer) staffMap.get("kicks"));
+        mutesStaff = new IntegerStat((Integer) staffMap.get("mutes"));
+        warnsStaff = new IntegerStat((Integer) staffMap.get("warns"));
+        bansStaff = new IntegerStat((Integer) staffMap.get("bans"));
+        reportsStaff = new IntegerStat((Integer) staffMap.get("reports"));
     }
 
     @Override

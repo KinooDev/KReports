@@ -2,13 +2,13 @@ package com.kino.kreports.stats;
 
 public interface Statistic {
 
-    Bans getBans();
+    IntegerStat getBans();
 
-    Reports getReports();
+    IntegerStat getReports();
 
-    Warns getWarns();
+    IntegerStat getWarns();
 
-    Mutes getMutes();
+    IntegerStat getMutes();
 
-    Kicks getKicks();
+    IntegerStat getKicks();
 }
