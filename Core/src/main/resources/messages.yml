@@ -4,4 +4,8 @@ report:
     - "&a<reported> &ewas reported by &a<reporter> &ebecause of &c<reason>&e."
     - "&a<reported> &ehas now &3<reports> &ereports!"
     - "&b---------------------------------------------------------"
+  teleportMessage:
+    text: "&bClick to teleport to <player>"
+    #Supported placeholders: <world> <player>
+    hoverText: "<world>"
   comments: "&b<name>: &a<comment>"

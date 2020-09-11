@@ -4,6 +4,11 @@ import com.kino.kore.utils.files.YMLFile;
 import com.kino.kore.utils.storage.Storage;
 import com.kino.kreports.storage.reports.Report;
 import com.kino.kreports.storage.user.User;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -23,6 +28,7 @@ public class ReportUtils {
     private YMLFile messages;
 
     public void send (Player p, Report report) {
+
         if (p.hasPermission("kreports.staff.info")) {
             for (String s : messages.getStringList("report.info")) {
                 p.sendMessage(s.replace("<reported>", Bukkit.getPlayer(report.getReported()).getName() == null ?
@@ -34,6 +40,14 @@ public class ReportUtils {
                                 playerStorage.find(report.getReported()).get().getReports() + "" : playerStorage.findFromData(report.getReported()).isPresent() ?
                                 playerStorage.findFromData(report.getReported()).get().getReports() + "" : "<error>")
                         .replace("<reason>", report.getReason()));
+                Player player = Bukkit.getPlayer(report.getReported());
+                TextComponent text = new TextComponent();
+                text.setText(ChatColor.translateAlternateColorCodes('&', messages.getString("report.teleportMessage.text").replace("<player>", player.getName())));
+                text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(messages.getString("report.teleportMessage.hoverText")
+                        .replace("<player>", player.getName())
+                        .replace("<world>", player.getWorld().getName())).create()));
+                text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "tp " + p.getName() + " " + player.getName()));
+                p.spigot().sendMessage(text);
             }
         }
     }

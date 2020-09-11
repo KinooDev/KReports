@@ -1,12 +1,14 @@
 package com.kino.kreports.services;
 
 import com.kino.kore.utils.service.Service;
+import com.kino.kreports.loader.ListenerLoader;
 import team.unnamed.inject.InjectAll;
 import team.unnamed.inject.name.Named;
 
 @InjectAll
 public class KReportsService implements Service {
 
+    private ListenerLoader listenerLoader;
 
     @Named("users-service")
     private Service usersService;
@@ -16,6 +18,8 @@ public class KReportsService implements Service {
 
     @Override
     public void start() {
+        listenerLoader.load();
+
         usersService.start();
         reportsService.start();
     }
