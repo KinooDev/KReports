@@ -25,7 +25,6 @@ public class KReportsCommand implements CommandClass {
 
     private Storage<UUID, User> userStorage;
 
-    @Inject
     @Named("kreports-service")
     private Service kreportsService;
 
