@@ -1,3 +1,7 @@
+staffSet: "&bYou are now considered a staff!"
+staffSetBroadcast: "&a<player> is now a staff!"
+staffUnSet: "&bYou are not longer considered a staff!"
+staffUnSetBroadcast: "&a<player> is not longer a staff!"
 report:
   info:
     - "&b---------------------------------------------------------"

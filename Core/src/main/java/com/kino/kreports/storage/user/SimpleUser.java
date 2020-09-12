@@ -25,6 +25,14 @@ public class SimpleUser implements User{
         reports = new IntegerStat();
     }
 
+    public SimpleUser(User user) {
+        kicks = user.getKicks();
+        mutes = user.getMutes();
+        warns = user.getWarns();
+        bans = user.getBans();
+        reports = user.getReports();
+    }
+
     public SimpleUser(Map<String, Object> userMap) {
         kicks = new IntegerStat((Integer) userMap.get("kicks"));
         mutes = new IntegerStat((Integer) userMap.get("mutes"));

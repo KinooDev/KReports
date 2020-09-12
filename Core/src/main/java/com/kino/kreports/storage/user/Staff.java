@@ -32,6 +32,20 @@ public class Staff extends SimpleUser {
         reportsStaff = new IntegerStat();
     }
 
+    public Staff (SimpleUser user) {
+        kicks = user.getKicks();
+        mutes = user.getMutes();
+        warns = user.getWarns();
+        bans = user.getBans();
+        reports = user.getReports();
+
+        kicksStaff = new IntegerStat();
+        mutesStaff = new IntegerStat();
+        warnsStaff = new IntegerStat();
+        bansStaff = new IntegerStat();
+        reportsStaff = new IntegerStat();
+    }
+
     public Staff(Map<String, Object> userMap) {
         kicks = new IntegerStat((Integer) userMap.get("kicks"));
         mutes = new IntegerStat((Integer) userMap.get("mutes"));
