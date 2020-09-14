@@ -4,6 +4,7 @@ import com.kino.kore.utils.files.YMLFile;
 import com.kino.kore.utils.messages.MessageUtils;
 import com.kino.kore.utils.service.Service;
 import com.kino.kore.utils.storage.Storage;
+import com.kino.kreports.storage.reports.Report;
 import com.kino.kreports.storage.user.SimpleUser;
 import com.kino.kreports.storage.user.Staff;
 import com.kino.kreports.storage.user.User;
@@ -25,8 +26,7 @@ public class KReportsCommand implements CommandClass {
 
     private Storage<UUID, User> userStorage;
 
-    @Named("kreports-service")
-    private Service kreportsService;
+    private Storage<UUID, Report> reportStorage;
 
     @Named("config")
     private YMLFile config;
@@ -41,34 +41,41 @@ public class KReportsCommand implements CommandClass {
     private YMLFile reportsData;
 
     @ACommand(names = {"setstaff", "promote", "addstaff"}, desc = "Set a player as a staff, to has staffs' stats", permission = "kreports.commands.main.setstaff")
-    public boolean executeSetStaff (@Injected(true) CommandSender sender, String name) {
-        Player p = Bukkit.getPlayer(name);
+    public boolean executeSetStaff (@Injected(true) CommandSender sender, Player p) {
 
-        if (p !=null && p.isOnline() && p.hasPermission("kreports.staff") && userStorage.find(p.getUniqueId()).isPresent()) {
+        if (p !=null && p.isOnline() && sender.hasPermission("kreports.staff")) {
+                if (userStorage.find(p.getUniqueId()).isPresent()) {
 
-            if (!(userStorage.find(p.getUniqueId()).get() instanceof Staff) && userStorage.find(p.getUniqueId()).get() instanceof SimpleUser) {
+                    if (!(userStorage.find(p.getUniqueId()).get() instanceof Staff) && userStorage.find(p.getUniqueId()).get() instanceof SimpleUser) {
 
-                Staff s = new Staff((SimpleUser) userStorage.find(p.getUniqueId()).get());
+                        Staff s = new Staff((SimpleUser) userStorage.find(p.getUniqueId()).get());
 
-                userStorage.remove(p.getUniqueId());
-                userStorage.get().put(p.getUniqueId(), s);
+                        userStorage.remove(p.getUniqueId());
+                        userStorage.get().put(p.getUniqueId(), s);
 
-                MessageUtils.sendMessage(p, messages.getString("staffSet"));
+                        MessageUtils.sendMessage(p, messages.getString("staffSet").replace("<player>", p.getName()));
 
-                Bukkit.getOnlinePlayers().forEach(player -> {
-                    if(player.hasPermission("kreports.staff")) {
-                        MessageUtils.sendMessage(player, messages.getString("staffSetBroadcast").replace("<player>", p.getName()));
-                    }});
+                        Bukkit.getOnlinePlayers().forEach(player -> {
+                            if (player.hasPermission("kreports.staff")) {
+                                MessageUtils.sendMessage(player, messages.getString("staffSetBroadcast").replace("<player>", p.getName()));
+                            }
+                        });
+                    } else {
+                        MessageUtils.sendMessage(sender, messages.getString("alreadyAStaff").replace("<player>", p.getName()));
+                    }
 
+                } else {
+                    return false;
+                }
                 return true;
-            }
+        } else {
+            return false;
         }
-        return false;
+
     }
 
     @ACommand(names = {"unsetstaff", "demote", "removestaff"}, desc = "Set a player as a user, to remove him staffs' stats", permission = "kreports.commands.main.unsetstaff")
-    public boolean executeUnSetStaff (@Injected(true) CommandSender sender, String name) {
-        Player p = Bukkit.getPlayer(name);
+    public boolean executeUnSetStaff (@Injected(true) CommandSender sender, Player p) {
 
         if ((p !=null && p.isOnline() && userStorage.find(p.getUniqueId()).isPresent())) {
 
@@ -79,27 +86,33 @@ public class KReportsCommand implements CommandClass {
                 userStorage.remove(p.getUniqueId());
                 userStorage.get().put(p.getUniqueId(), simpleUser);
 
-                MessageUtils.sendMessage(p, messages.getString("staffUnSet"));
+                MessageUtils.sendMessage(p, messages.getString("staffUnSet").replace("<player>", p.getName()));
 
                 Bukkit.getOnlinePlayers().forEach(player -> {
                     if(player.hasPermission("kreports.staff")) {
                         MessageUtils.sendMessage(player, messages.getString("staffUnSetBroadcast").replace("<player>", p.getName()));
                     }});
 
-                return true;
+            } else {
+                MessageUtils.sendMessage(sender, messages.getString("notAStaff").replace("<player>", p.getName()));
             }
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     @ACommand(names = {"reload", "rl"}, desc = "Reload the plugin", permission = "kreports.commands.main.reload")
     public boolean executeReload (@Injected(true) CommandSender sender) {
-        kreportsService.stop();
-        kreportsService.start();
+        reportStorage.saveAll();
+        userStorage.saveAll();
+        reportStorage.loadAll();
+        userStorage.loadAll();
         config.reload();
         messages.reload();
         playerData.reload();
         reportsData.reload();
+        MessageUtils.sendMessage(sender, "&aReloaded!");
         return true;
     }
 }

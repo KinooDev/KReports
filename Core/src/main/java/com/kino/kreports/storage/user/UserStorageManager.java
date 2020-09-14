@@ -52,7 +52,7 @@ public class UserStorageManager implements Storage<UUID, User> {
             if(((ConfigurationSection) o).contains("staff")) {
                 return Optional.of(
                         new Staff(
-                                playerData.getConfigurationSection("users." + uuid.toString()).getValues(false)
+                                playerData.getConfigurationSection("users." + uuid.toString())
                         )
                 );
             } else {

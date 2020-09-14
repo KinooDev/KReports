@@ -3,7 +3,9 @@ package com.kino.kreports.storage.user;
 
 import com.kino.kreports.stats.*;
 import lombok.Getter;
+import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -61,6 +63,21 @@ public class Staff extends SimpleUser {
         reportsStaff = new IntegerStat((Integer) staffMap.get("reports"));
     }
 
+    public Staff(ConfigurationSection configurationSection) {
+        kicks = new IntegerStat(configurationSection.getInt("kicks"));
+        mutes = new IntegerStat(configurationSection.getInt("mutes"));
+        warns = new IntegerStat(configurationSection.getInt("warns"));
+        bans = new IntegerStat(configurationSection.getInt("bans"));
+        reports = new IntegerStat(configurationSection.getInt("reports"));
+
+        Map<String, Object> staffMap = configurationSection.getConfigurationSection("staff").getValues(false);
+        kicksStaff = new IntegerStat((Integer) staffMap.get("kicks"));
+        mutesStaff = new IntegerStat((Integer) staffMap.get("mutes"));
+        warnsStaff = new IntegerStat((Integer) staffMap.get("warns"));
+        bansStaff = new IntegerStat((Integer) staffMap.get("bans"));
+        reportsStaff = new IntegerStat((Integer) staffMap.get("reports"));
+    }
+
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> playerMap = new LinkedHashMap<>();
@@ -71,7 +88,7 @@ public class Staff extends SimpleUser {
         playerMap.put("warns", getWarns().get());
         playerMap.put("mutes", getMutes().get());
 
-        Map<String, Object> staffMap = new LinkedHashMap<>();
+        Map<String, Object> staffMap = new HashMap<>();
         staffMap.put("kicks", getKicksStaff().get());
         staffMap.put("bans", getBansStaff().get());
         staffMap.put("reports", getReportsStaff().get());
