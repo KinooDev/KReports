@@ -12,12 +12,12 @@ import org.bukkit.entity.Player;
 import team.unnamed.inject.InjectAll;
 
 @InjectAll
-@ACommand(names = "staff", desc = "All the functions to check reports & staff stuff", permission = "kreports.commands.report.staff")
-public class StaffSubCommand implements CommandClass {
+@ACommand(names = "check", desc = "All the functions to check bans, warns, reports, etc", permission = "kreports.commands.staff.check")
+public class CheckCommand implements CommandClass {
 
     private ReportUtils reportUtils;
 
-    @ACommand(names = "check", desc = "Check player's reports", permission = "kreports.commands.report.staff.check")
+    @ACommand(names = {"reports", "report"}, desc = "Check player's reports", permission = "kreports.commands.staff.check.reports")
     public boolean executeCheck (@Injected(true) CommandSender sender, @Optional OfflinePlayer target) {
 
 

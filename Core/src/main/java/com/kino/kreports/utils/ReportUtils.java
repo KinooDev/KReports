@@ -35,7 +35,7 @@ public class ReportUtils {
     private YMLFile messages;
 
     public List<String> format (Report report) {
-        List<String> formatter = messages.getStringList("report.format");
+        List<String> formatter = messages.getStringList("report.format.info");
 
         for (UUID uuid : reportStorage.get().keySet()) {
             if (reportStorage.find(uuid).isPresent()){
@@ -52,6 +52,8 @@ public class ReportUtils {
                             "<state>", report.getState().name().toUpperCase()
                     ).replace(
                             "<priority>", report.getPriority().name().toUpperCase()
+                    ).replace(
+                            "<player>", Bukkit.getOfflinePlayer(report.getReported()).getName()
                     )));
                 }
             }
@@ -61,6 +63,7 @@ public class ReportUtils {
     }
 
     public void sendReportsOfPlayer (OfflinePlayer p, CommandSender receiver) {
+        sendReportListHeader(p, receiver);
         for (UUID reportUUID : reportStorage.get().keySet()) {
             if (reportStorage.find(reportUUID).isPresent()){
                 Report report = reportStorage.find(reportUUID).get();
@@ -71,6 +74,23 @@ public class ReportUtils {
                 }
             }
         }
+    }
+
+    private void sendReportListHeader (OfflinePlayer p, CommandSender receiver) {
+        String reports;
+        if (playerStorage.find(p.getUniqueId()).isPresent()) {
+            reports = playerStorage.find(p.getUniqueId()).get().getReports().get() + "";
+        } else {
+            if (playerStorage.findFromData(p.getUniqueId()).isPresent()) {
+                reports = playerStorage.findFromData(p.getUniqueId()).get().getReports().get() + "";
+            } else {
+                reports = "error";
+            }
+        }
+
+        MessageUtils.sendMessage(receiver, messages.getString("report.format.header").replace(
+                "<player>", p.getName()).replace(
+                "<reports>", reports));
     }
 
     public void broadcast (Report report) {

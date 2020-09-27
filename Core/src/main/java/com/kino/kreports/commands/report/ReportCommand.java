@@ -3,7 +3,6 @@ package com.kino.kreports.commands.report;
 import com.kino.kore.utils.files.YMLFile;
 import com.kino.kore.utils.messages.MessageUtils;
 import com.kino.kore.utils.storage.Storage;
-import com.kino.kreports.commands.report.subcommand.StaffSubCommand;
 import com.kino.kreports.models.reports.Report;
 import com.kino.kreports.models.user.User;
 import com.kino.kreports.utils.ReportUtils;
@@ -18,7 +17,6 @@ import java.util.UUID;
 
 @InjectAll
 @ACommand(names = {"report"}, desc = "Report and utilities command", permission = "kreports.commands.report")
-@SubCommandClasses(StaffSubCommand.class)
 public class ReportCommand implements CommandClass {
 
     private ReportUtils reportUtils;
@@ -40,17 +38,22 @@ public class ReportCommand implements CommandClass {
             Player player = (Player) sender;
             if (p != null && p.isOnline()) {
 
-                Report report = new Report(p.getUniqueId(), player.getUniqueId(), reason);
+                if (p.getName().equals(sender.getName())) {
 
-                if (playerStorage.find(p.getUniqueId()).isPresent()) {
-                    playerStorage.find(p.getUniqueId()).get().getReports().add(1);
+                    Report report = new Report(p.getUniqueId(), player.getUniqueId(), reason);
+
+                    if (playerStorage.find(p.getUniqueId()).isPresent()) {
+                        playerStorage.find(p.getUniqueId()).get().getReports().add(1);
+                    }
+                    reportUtils.broadcast(report);
+                    reportStorage.add(UUID.randomUUID(), report);
+
+                    MessageUtils.sendMessage(player, messages.getString("report.succesfullyReported").replace(
+                            "<reason>", reason).replace(
+                            "<reported>", p.getName()));
+                } else {
+                    MessageUtils.sendMessage(player, messages.getString("report.yourself"));
                 }
-                reportUtils.broadcast(report);
-                reportStorage.add(UUID.randomUUID(), report);
-
-                MessageUtils.sendMessage(player, messages.getString("report.succesfullyReported").replace(
-                        "<reason>", reason).replace(
-                                "<reported>", p.getName()));
 
             } else {
                 MessageUtils.sendMessage(player, messages.getString("playerNotOnline"));

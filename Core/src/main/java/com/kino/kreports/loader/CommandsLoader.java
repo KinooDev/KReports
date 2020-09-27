@@ -5,6 +5,7 @@ import com.kino.kore.utils.loaders.Loader;
 import com.kino.kreports.KReports;
 import com.kino.kreports.commands.main.KReportsCommand;
 import com.kino.kreports.commands.report.ReportCommand;
+import com.kino.kreports.commands.report.subcommand.CheckCommand;
 import com.kino.kreports.i18n.CustomI18n;
 import com.kino.kreports.listener.JoinListener;
 import com.kino.kreports.listener.QuitListener;
@@ -23,6 +24,7 @@ public class CommandsLoader implements Loader {
 
     private KReportsCommand kReportsCommand;
     private ReportCommand reportCommand;
+    private CheckCommand checkCommand;
     private KReports plugin;
 
     @Named("messages")
@@ -43,6 +45,6 @@ public class CommandsLoader implements Loader {
     @Override
     public void load() {
         commandManager.setI18n(new CustomI18n(messages));
-        registerCommands(kReportsCommand, reportCommand);
+        registerCommands(kReportsCommand, reportCommand, checkCommand);
     }
 }

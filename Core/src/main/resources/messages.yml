@@ -12,9 +12,13 @@ staffUnSet: "&bYou are not longer considered a staff!"
 staffUnSetBroadcast: "&a<player> is not longer a staff!"
 report:
   format:
-    - "&b<uuid>&e: &b<date>"
-    - "&a<reporter>&e, &a<reason>"
-    - "&c<state>&e, &c<priority>"
+    header: "&3Reports of <player> (total: <reports>): "
+    info:
+      - "&b<uuid>&e: &b<date>"
+      - "&a<reporter>&e, &a<reason>"
+      - "&c<state>&e, &c<priority>"
+      - "&m&b------------------------------"
+  yourself: "&cYou can't report yourself!"
   succesfullyReported: "&aSuccessffully reported <reported> for <reason>"
   info:
     - "&b-----------------------------------------------------"
