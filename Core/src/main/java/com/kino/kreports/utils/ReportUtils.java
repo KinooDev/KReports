@@ -6,12 +6,13 @@ import com.kino.kore.utils.storage.Storage;
 import com.kino.kreports.models.reports.Report;
 import com.kino.kreports.models.user.Staff;
 import com.kino.kreports.models.user.User;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -20,6 +21,7 @@ import team.unnamed.inject.InjectAll;
 import team.unnamed.inject.name.Named;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,7 +36,7 @@ public class ReportUtils {
     @Named("messages")
     private YMLFile messages;
 
-    public List<String> format (Report report) {
+    public List<String> format (Report report, boolean comments) {
         List<String> formatter = messages.getStringList("report.format.info");
 
         for (UUID uuid : reportStorage.get().keySet()) {
@@ -55,6 +57,34 @@ public class ReportUtils {
                     ).replace(
                             "<player>", Bukkit.getOfflinePlayer(report.getReported()).getName()
                     )));
+
+                    StringBuilder builder = new StringBuilder();
+
+                    for (int i = 0; i < report.getComments().size(); i++) {
+                        builder.append(report.getComments().get(i));
+
+                        if (i == report.getComments().size() - 1) {
+                            builder.append(".");
+                        } else {
+                            builder.append(", ");
+                        }
+                    }
+
+                    if(comments && !report.getComments().isEmpty()) {
+                        formatter.replaceAll(s -> ChatColor.translateAlternateColorCodes('&', s).replace(
+                                "<comments>", builder.toString()));
+                    } else {
+                        List<String> list = new ArrayList<>();
+
+                        for (String s : formatter) {
+                            if(ChatColor.stripColor(s).equals("<comments>")) {
+                                continue;
+                            }
+
+                            list.add(s.replace("<comments>", ""));
+                        }
+                        formatter = list;
+                    }
                 }
             }
         }
@@ -62,14 +92,25 @@ public class ReportUtils {
         return formatter;
     }
 
-    public void sendReportsOfPlayer (OfflinePlayer p, CommandSender receiver) {
+
+
+    public void sendReportsOfPlayer (OfflinePlayer p, CommandSender receiver, boolean comments) {
         sendReportListHeader(p, receiver);
         for (UUID reportUUID : reportStorage.get().keySet()) {
             if (reportStorage.find(reportUUID).isPresent()){
                 Report report = reportStorage.find(reportUUID).get();
                 if (report.getReported().equals(p.getUniqueId())) {
-                    for (String s : format(report)) {
-                        MessageUtils.sendMessage(receiver, s);
+                    for (String s : format(report, comments)) {
+                        if (receiver instanceof Player) {
+                            Player player = (Player) receiver;
+                            TextComponent text = new TextComponent();
+                            text.setText(ChatColor.translateAlternateColorCodes('&', s));
+                            text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(messages.getString("report.format.hoverText")).create()));
+                            text.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, reportUUID.toString()));
+                            player.spigot().sendMessage(text);
+                        } else {
+                            MessageUtils.sendMessage(receiver, s);
+                        }
                     }
                 }
             }

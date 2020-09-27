@@ -1,5 +1,6 @@
 package com.kino.kreports.commands.report;
 
+import com.kino.kore.utils.JavaUtils;
 import com.kino.kore.utils.files.YMLFile;
 import com.kino.kore.utils.messages.MessageUtils;
 import com.kino.kore.utils.storage.Storage;
@@ -8,6 +9,7 @@ import com.kino.kreports.models.user.User;
 import com.kino.kreports.utils.ReportUtils;
 import me.fixeddev.ebcm.parametric.CommandClass;
 import me.fixeddev.ebcm.parametric.annotation.*;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import team.unnamed.inject.InjectAll;
@@ -38,16 +40,19 @@ public class ReportCommand implements CommandClass {
             Player player = (Player) sender;
             if (p != null && p.isOnline()) {
 
-                if (p.getName().equals(sender.getName())) {
+                if (!p.getName().equals(sender.getName())) {
 
-                    Report report = new Report(p.getUniqueId(), player.getUniqueId(), reason);
-
+                    Report report;
+                    if (StringUtils.isBlank(reason)) {
+                        report = new Report(p.getUniqueId(), player.getUniqueId(), config.getString("reports.defaultReason"));
+                    } else {
+                        report = new Report(p.getUniqueId(), player.getUniqueId(), reason);
+                    }
                     if (playerStorage.find(p.getUniqueId()).isPresent()) {
                         playerStorage.find(p.getUniqueId()).get().getReports().add(1);
                     }
-                    reportUtils.broadcast(report);
                     reportStorage.add(UUID.randomUUID(), report);
-
+                    reportUtils.broadcast(report);
                     MessageUtils.sendMessage(player, messages.getString("report.succesfullyReported").replace(
                             "<reason>", reason).replace(
                             "<reported>", p.getName()));

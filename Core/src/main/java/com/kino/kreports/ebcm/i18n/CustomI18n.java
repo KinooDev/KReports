@@ -1,4 +1,4 @@
-package com.kino.kreports.i18n;
+package com.kino.kreports.ebcm.i18n;
 
 import com.kino.kore.utils.files.YMLFile;
 import me.fixeddev.ebcm.i18n.DefaultI18n;
