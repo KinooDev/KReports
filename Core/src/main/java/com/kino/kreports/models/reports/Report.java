@@ -94,5 +94,39 @@ public class Report implements ConfigurationSerializable {
         return reportMap;
     }
 
+    @Override
+    public String toString() {
+        return "Report{" +
+                "priority=" + priority +
+                ", state=" + state +
+                ", reported=" + reported +
+                ", reporter=" + reporter +
+                ", reason='" + reason + '\'' +
+                ", accepted=" + accepted +
+                ", comments=" + comments +
+                ", staffInspection=" + staffInspection +
+                ", date=" + date +
+                '}';
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Report report = (Report) o;
+        return accepted == report.accepted &&
+                priority == report.priority &&
+                state == report.state &&
+                Objects.equals(reported, report.reported) &&
+                Objects.equals(reporter, report.reporter) &&
+                Objects.equals(reason, report.reason) &&
+                Objects.equals(comments, report.comments) &&
+                Objects.equals(staffInspection, report.staffInspection) &&
+                Objects.equals(date, report.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(priority, state, reported, reporter, reason, accepted, comments, staffInspection, date);
+    }
 }

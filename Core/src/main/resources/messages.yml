@@ -6,6 +6,10 @@ notAStaff: "&c<player> is not a staff!"
 staffUnSet: "&bYou are not longer considered a staff!"
 staffUnSetBroadcast: "&a<player> is not longer a staff!"
 report:
+  format:
+    - "&b<uuid>&e: &b<date>"
+    - "&a<reporter>&e, &a<reason>"
+    - "&c<state>&e, &c<priority>
   succesfullyReported: "&aSuccessffully reported <reported> for <reason>"
   info:
     - "&b-----------------------------------------------------"

@@ -1,6 +1,7 @@
 package com.kino.kreports.utils;
 
 import com.kino.kore.utils.files.YMLFile;
+import com.kino.kore.utils.messages.MessageUtils;
 import com.kino.kore.utils.storage.Storage;
 import com.kino.kreports.models.reports.Report;
 import com.kino.kreports.models.user.Staff;
@@ -17,6 +18,8 @@ import team.unnamed.inject.Inject;
 import team.unnamed.inject.InjectAll;
 import team.unnamed.inject.name.Named;
 
+import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.UUID;
 
 @InjectAll
@@ -25,10 +28,49 @@ public class ReportUtils {
 
     private Storage<UUID, User> playerStorage;
 
-
+    private Storage<UUID, Report> reportStorage;
 
     @Named("messages")
     private YMLFile messages;
+
+    public List<String> format (Report report) {
+        List<String> formatter = messages.getStringList("report.format");
+
+        for (UUID uuid : reportStorage.get().keySet()) {
+            if (reportStorage.find(uuid).isPresent()){
+                if (reportStorage.find(uuid).get().equals(report)) {
+                    formatter.replaceAll(s -> ChatColor.translateAlternateColorCodes('&', s.replace(
+                            "<uuid>", uuid.toString()
+                            ).replace(
+                                    "<date>", new SimpleDateFormat("MMM dd,yyyy HH:mm").format(report.getDate())
+                    ).replace(
+                            "<reporter>", Bukkit.getOfflinePlayer(report.getReporter()).getName()
+                    ).replace(
+                            "<reason>", report.getReason()
+                    ).replace(
+                            "<state>", report.getState().name().toUpperCase()
+                    ).replace(
+                            "<priority>", report.getPriority().name().toUpperCase()
+                    )));
+                }
+            }
+        }
+
+        return formatter;
+    }
+
+    public void sendReportsOfPlayer (Player p, Player receiver) {
+        for (UUID reportUUID : reportStorage.get().keySet()) {
+            if (reportStorage.find(reportUUID).isPresent()){
+                Report report = reportStorage.find(reportUUID).get();
+                if (report.getReported().equals(p.getUniqueId())) {
+                    for (String s : format(report)) {
+                        MessageUtils.sendMessage(receiver, s);
+                    }
+                }
+            }
+        }
+    }
 
     public void broadcast (Report report) {
         for (Player online : Bukkit.getOnlinePlayers()) {
