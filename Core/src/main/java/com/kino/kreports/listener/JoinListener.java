@@ -1,9 +1,9 @@
 package com.kino.kreports.listener;
 
 import com.kino.kore.utils.storage.Storage;
-import com.kino.kreports.storage.user.SimpleUser;
-import com.kino.kreports.storage.user.Staff;
-import com.kino.kreports.storage.user.User;
+import com.kino.kreports.models.user.SimpleUser;
+import com.kino.kreports.models.user.Staff;
+import com.kino.kreports.models.user.User;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

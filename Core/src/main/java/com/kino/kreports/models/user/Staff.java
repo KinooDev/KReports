@@ -1,4 +1,4 @@
-package com.kino.kreports.storage.user;
+package com.kino.kreports.models.user;
 
 
 import com.kino.kreports.stats.*;

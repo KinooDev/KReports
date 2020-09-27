@@ -1,3 +1,4 @@
+playerNotOnline: "&cThat player is not online!"
 alreadyAStaff: "&c<player> was already a staff!"
 staffSet: "&bYou are now considered a staff!"
 staffSetBroadcast: "&a<player> is now a staff!"
@@ -5,11 +6,12 @@ notAStaff: "&c<player> is not a staff!"
 staffUnSet: "&bYou are not longer considered a staff!"
 staffUnSetBroadcast: "&a<player> is not longer a staff!"
 report:
+  succesfullyReported: "&aSuccessffully reported <reported> for <reason>"
   info:
-    - "&b---------------------------------------------------------"
+    - "&b-----------------------------------------------------"
     - "&a<reported> &ewas reported by &a<reporter> &ebecause of &c<reason>&e."
     - "&a<reported> &ehas now &3<reports> &ereports!"
-    - "&b---------------------------------------------------------"
+    - "&b-----------------------------------------------------"
   teleportMessage:
     text: "&bClick to teleport to <player>"
     #Supported placeholders: <world> <player>

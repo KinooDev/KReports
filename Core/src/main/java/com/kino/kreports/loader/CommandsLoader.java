@@ -3,6 +3,7 @@ package com.kino.kreports.loader;
 import com.kino.kore.utils.loaders.Loader;
 import com.kino.kreports.KReports;
 import com.kino.kreports.commands.main.KReportsCommand;
+import com.kino.kreports.commands.report.ReportCommand;
 import com.kino.kreports.listener.JoinListener;
 import com.kino.kreports.listener.QuitListener;
 import me.fixeddev.ebcm.bukkit.BukkitCommandManager;
@@ -18,6 +19,7 @@ import team.unnamed.inject.InjectIgnore;
 public class CommandsLoader implements Loader {
 
     private KReportsCommand kReportsCommand;
+    private ReportCommand reportCommand;
     private KReports plugin;
 
     @InjectIgnore
@@ -34,6 +36,6 @@ public class CommandsLoader implements Loader {
 
     @Override
     public void load() {
-        registerCommands(kReportsCommand);
+        registerCommands(kReportsCommand, reportCommand);
     }
 }

@@ -1,4 +1,4 @@
-package com.kino.kreports.storage.user;
+package com.kino.kreports.models.user;
 
 import com.kino.kreports.stats.*;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Getter
-public class SimpleUser implements User{
+public class SimpleUser implements User {
 
 
     protected IntegerStat kicks;

@@ -1,4 +1,4 @@
-package com.kino.kreports.storage.reports;
+package com.kino.kreports.models.reports;
 
 import com.kino.kreports.utils.ReportPriority;
 import com.kino.kreports.utils.ReportState;
@@ -29,7 +29,7 @@ public class Report implements ConfigurationSerializable {
 
     @Getter private final Date date;
 
-    Report (UUID reported, UUID reporter, String reason) {
+    public Report (UUID reported, UUID reporter, String reason) {
         this.priority = ReportPriority.MEDIUM;
         this.state = ReportState.PAUSED;
 
@@ -45,12 +45,12 @@ public class Report implements ConfigurationSerializable {
     }
 
 
-    Report (Map<String, Object> map) {
-        this.priority = (ReportPriority) map.get("priority");
-        this.state = (ReportState) map.get("state");
+    public Report (Map<String, Object> map) {
+        this.priority = ReportPriority.valueOf((String) map.get("priority"));
+        this.state = ReportState.valueOf((String) map.get("state"));
 
-        this.reported = (UUID) map.get("reported");
-        this.reporter = (UUID) map.get("reporter");
+        this.reported = UUID.fromString((String) map.get("reported"));
+        this.reporter = UUID.fromString((String) map.get("reporter"));
 
         this.reason = (String) map.get("reason");
 
@@ -82,10 +82,10 @@ public class Report implements ConfigurationSerializable {
     public Map<String, Object> serialize() {
         Map<String, Object> reportMap = new LinkedHashMap<>();
 
-        reportMap.put("priority", priority);
-        reportMap.put("state", state);
-        reportMap.put("reported", reported);
-        reportMap.put("reporter", reporter);
+        reportMap.put("priority", priority.name());
+        reportMap.put("state", state.name());
+        reportMap.put("reported", reported.toString());
+        reportMap.put("reporter", reporter.toString());
         reportMap.put("reason", reason);
         reportMap.put("comments", comments);
         reportMap.put("staffInspection", staffInspection);

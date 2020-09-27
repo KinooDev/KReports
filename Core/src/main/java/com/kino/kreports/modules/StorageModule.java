@@ -1,9 +1,9 @@
 package com.kino.kreports.modules;
 
 import com.kino.kore.utils.storage.Storage;
-import com.kino.kreports.storage.reports.Report;
+import com.kino.kreports.models.reports.Report;
 import com.kino.kreports.storage.reports.ReportStorageManager;
-import com.kino.kreports.storage.user.User;
+import com.kino.kreports.models.user.User;
 import com.kino.kreports.storage.user.UserStorageManager;
 import team.unnamed.inject.bind.AbstractModule;
 import team.unnamed.inject.identity.Key;

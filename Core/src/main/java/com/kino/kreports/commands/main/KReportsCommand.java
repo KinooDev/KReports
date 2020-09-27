@@ -2,19 +2,17 @@ package com.kino.kreports.commands.main;
 
 import com.kino.kore.utils.files.YMLFile;
 import com.kino.kore.utils.messages.MessageUtils;
-import com.kino.kore.utils.service.Service;
 import com.kino.kore.utils.storage.Storage;
-import com.kino.kreports.storage.reports.Report;
-import com.kino.kreports.storage.user.SimpleUser;
-import com.kino.kreports.storage.user.Staff;
-import com.kino.kreports.storage.user.User;
+import com.kino.kreports.models.reports.Report;
+import com.kino.kreports.models.user.SimpleUser;
+import com.kino.kreports.models.user.Staff;
+import com.kino.kreports.models.user.User;
 import me.fixeddev.ebcm.parametric.CommandClass;
 import me.fixeddev.ebcm.parametric.annotation.ACommand;
 import me.fixeddev.ebcm.parametric.annotation.Injected;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import team.unnamed.inject.Inject;
 import team.unnamed.inject.InjectAll;
 import team.unnamed.inject.name.Named;
 
@@ -43,7 +41,7 @@ public class KReportsCommand implements CommandClass {
     @ACommand(names = {"setstaff", "promote", "addstaff"}, desc = "Set a player as a staff, to has staffs' stats", permission = "kreports.commands.main.setstaff")
     public boolean executeSetStaff (@Injected(true) CommandSender sender, Player p) {
 
-        if (p !=null && p.isOnline() && sender.hasPermission("kreports.staff")) {
+        if (p !=null && p.isOnline() && p.hasPermission("kreports.staff")) {
                 if (userStorage.find(p.getUniqueId()).isPresent()) {
 
                     if (!(userStorage.find(p.getUniqueId()).get() instanceof Staff) && userStorage.find(p.getUniqueId()).get() instanceof SimpleUser) {

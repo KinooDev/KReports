@@ -1,14 +1,13 @@
 package com.kino.kreports.listener;
 
 import com.kino.kore.utils.storage.Storage;
-import com.kino.kreports.storage.user.User;
+import com.kino.kreports.models.user.User;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import team.unnamed.inject.InjectAll;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @InjectAll
