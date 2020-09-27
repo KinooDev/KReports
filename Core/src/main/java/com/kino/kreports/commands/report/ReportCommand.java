@@ -3,14 +3,12 @@ package com.kino.kreports.commands.report;
 import com.kino.kore.utils.files.YMLFile;
 import com.kino.kore.utils.messages.MessageUtils;
 import com.kino.kore.utils.storage.Storage;
+import com.kino.kreports.commands.report.subcommand.StaffSubCommand;
 import com.kino.kreports.models.reports.Report;
 import com.kino.kreports.models.user.User;
 import com.kino.kreports.utils.ReportUtils;
 import me.fixeddev.ebcm.parametric.CommandClass;
-import me.fixeddev.ebcm.parametric.annotation.ACommand;
-import me.fixeddev.ebcm.parametric.annotation.ConsumedArgs;
-import me.fixeddev.ebcm.parametric.annotation.Injected;
-import me.fixeddev.ebcm.parametric.annotation.Optional;
+import me.fixeddev.ebcm.parametric.annotation.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import team.unnamed.inject.InjectAll;
@@ -20,6 +18,7 @@ import java.util.UUID;
 
 @InjectAll
 @ACommand(names = {"report"}, desc = "Report and utilities command", permission = "kreports.commands.report")
+@SubCommandClasses(StaffSubCommand.class)
 public class ReportCommand implements CommandClass {
 
     private ReportUtils reportUtils;
@@ -62,5 +61,6 @@ public class ReportCommand implements CommandClass {
         return true;
 
     }
+
 
 }

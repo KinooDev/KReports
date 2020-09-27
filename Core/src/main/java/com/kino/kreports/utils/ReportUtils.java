@@ -12,6 +12,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import team.unnamed.inject.Inject;
@@ -59,7 +60,7 @@ public class ReportUtils {
         return formatter;
     }
 
-    public void sendReportsOfPlayer (Player p, Player receiver) {
+    public void sendReportsOfPlayer (OfflinePlayer p, CommandSender receiver) {
         for (UUID reportUUID : reportStorage.get().keySet()) {
             if (reportStorage.find(reportUUID).isPresent()){
                 Report report = reportStorage.find(reportUUID).get();

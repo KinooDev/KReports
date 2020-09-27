@@ -1,3 +1,8 @@
+noPermission: "&cNo permission"
+wrongUsage: "&cThat is not the correct usage for the command!"
+missingArgument: "&cThere is an argument missing!"
+missingSubCommand: "&cThere is a subcommand missing!"
+invalidSubCommand: "&cThat subcommand doesn't exists"
 playerNotOnline: "&cThat player is not online!"
 alreadyAStaff: "&c<player> was already a staff!"
 staffSet: "&bYou are now considered a staff!"
@@ -9,7 +14,7 @@ report:
   format:
     - "&b<uuid>&e: &b<date>"
     - "&a<reporter>&e, &a<reason>"
-    - "&c<state>&e, &c<priority>
+    - "&c<state>&e, &c<priority>"
   succesfullyReported: "&aSuccessffully reported <reported> for <reason>"
   info:
     - "&b-----------------------------------------------------"
