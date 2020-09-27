@@ -10,16 +10,21 @@ staffSetBroadcast: "&a<player> is now a staff!"
 notAStaff: "&c<player> is not a staff!"
 staffUnSet: "&bYou are not longer considered a staff!"
 staffUnSetBroadcast: "&a<player> is not longer a staff!"
+invalidUUID: "&cPlease, enter a valid UUID"
 report:
+  addComment: "&aSuccessfully added the comment!"
   format:
     header: "&3Reports of <player> (total: <reports>): "
+    #The <comments> could not be, and it is shown as: %comment%, %comment2%, %comment3%...
     info:
       - "&b<uuid>&e: &b<date>"
       - "&a<reporter>&e, &a<reason>"
       - "&c<state>&e, &c<priority>"
+      - "&a<comments>"
       - "&m&b------------------------------"
+    hoverText: "&aClick to copy uuid!"
   yourself: "&cYou can't report yourself!"
-  succesfullyReported: "&aSuccessffully reported <reported> for <reason>"
+  succesfullyReported: "&aSuccessfully reported <reported> for <reason>"
   info:
     - "&b-----------------------------------------------------"
     - "&a<reported> &ewas reported by &a<reporter> &ebecause of &c<reason>&e."

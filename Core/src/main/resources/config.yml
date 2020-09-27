@@ -1,4 +1,3 @@
 #bungee: false
 reports:
-  #NOT WORKING BECAUSE A BUKKIT ERROR
-  #defaultReason: "Hacking"
+  defaultReason: "Hacking"
