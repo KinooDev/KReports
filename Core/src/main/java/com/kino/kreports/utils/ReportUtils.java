@@ -169,5 +169,13 @@ public class ReportUtils {
 
     public void addComment (CommandSender sender, String s, Report report) {
         report.getComments().add(messages.getString("report.comments").replace("<name>", sender instanceof Player ? sender.getName() : "Console").replace("<comment>", s));
+        MessageUtils.sendMessage(sender, messages.getString("report.addComment"));
+    }
+
+    public void changePriority (CommandSender sender, Report report, ReportPriority reportPriority, UUID uuid) {
+        ReportPriority old = report.getPriority();
+        report.setPriority(reportPriority);
+        MessageUtils.sendMessage(sender, messages.getString("report.changePriority").replace("<uuid>", uuid.toString()).replace("<priority>",
+                old.name()).replace("<newpriority>", reportPriority.name()));
     }
 }

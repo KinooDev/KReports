@@ -11,11 +11,13 @@ notAStaff: "&c<player> is not a staff!"
 staffUnSet: "&bYou are not longer considered a staff!"
 staffUnSetBroadcast: "&a<player> is not longer a staff!"
 invalidUUID: "&cPlease, enter a valid UUID"
+invalidPriority: "&cPlease, enter a valid report priority"
 report:
+  changePriority: "&bYou changed the priority of '&e<uuid>&b' from &a<priority> &bto &a<newpriority>&b."
   addComment: "&aSuccessfully added the comment!"
   format:
     header: "&3Reports of <player> (total: <reports>): "
-    #The <comments> could not be, and it is shown as: %comment%, %comment2%, %comment3%...
+    #The <comments> could not exist, and it is shown as: %comment%, %comment2%, %comment3%...
     info:
       - "&b<uuid>&e: &b<date>"
       - "&a<reporter>&e, &a<reason>"
