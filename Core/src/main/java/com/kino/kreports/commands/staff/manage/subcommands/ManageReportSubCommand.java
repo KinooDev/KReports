@@ -5,6 +5,7 @@ import com.kino.kore.utils.messages.MessageUtils;
 import com.kino.kore.utils.storage.Storage;
 import com.kino.kreports.models.reports.Report;
 import com.kino.kreports.utils.ReportPriority;
+import com.kino.kreports.utils.ReportState;
 import com.kino.kreports.utils.ReportUtils;
 import me.fixeddev.ebcm.parametric.CommandClass;
 import me.fixeddev.ebcm.parametric.annotation.ACommand;
@@ -43,14 +44,29 @@ public class ManageReportSubCommand implements CommandClass {
 
     }
 
-    @ACommand(names = {"setpriority"}, desc = "Add a comment to a report", permission = "kreports.commands.staff.manage.reports.addcomment")
-    public boolean executeAddComment (@Injected(true) CommandSender sender, UUID uuid, ReportPriority priority) {
+    @ACommand(names = {"setpriority", "changepriority"}, desc = "Change the priority of a report", permission = "kreports.commands.staff.manage.reports.set.priority")
+    public boolean executeChangeReportPriority (@Injected(true) CommandSender sender, UUID uuid, ReportPriority priority) {
 
         if (reportStorage.find(uuid).isPresent()) {
             Report report = reportStorage.find(uuid).get();
             reportUtils.changePriority(sender, report, priority, uuid);
         } else {
             MessageUtils.sendMessage(sender, messages.getString("invalidPriority"));
+
+        }
+
+        return true;
+
+    }
+
+    @ACommand(names = {"setstate", "changestate"}, desc = "Change the state of a report", permission = "kreports.commands.staff.manage.reports.set.state")
+    public boolean executeChangeReportState (@Injected(true) CommandSender sender, UUID uuid, ReportState state) {
+
+        if (reportStorage.find(uuid).isPresent()) {
+            Report report = reportStorage.find(uuid).get();
+            reportUtils.changeState(sender, report, state, uuid);
+        } else {
+            MessageUtils.sendMessage(sender, messages.getString("invalidState"));
 
         }
 

@@ -12,8 +12,10 @@ staffUnSet: "&bYou are not longer considered a staff!"
 staffUnSetBroadcast: "&a<player> is not longer a staff!"
 invalidUUID: "&cPlease, enter a valid UUID"
 invalidPriority: "&cPlease, enter a valid report priority"
+invalidState: "&cPlease, enter a valid report state"
 report:
   changePriority: "&bYou changed the priority of '&e<uuid>&b' from &a<priority> &bto &a<newpriority>&b."
+  changeState: "&bYou changed the state of '&e<uuid>&b' from &a<state> &bto &a<newstate>&b."
   addComment: "&aSuccessfully added the comment!"
   format:
     header: "&3Reports of <player> (total: <reports>): "
@@ -24,6 +26,10 @@ report:
       - "&c<state>&e, &c<priority>"
       - "&a<comments>"
       - "&m&b------------------------------"
+    comments:
+      base: "&e<id>. &a<comment>"
+      #<uuid> is not a variable!
+      seeMore: "&cTo see more use /check comments <uuid>."
     hoverText: "&aClick to copy uuid!"
   yourself: "&cYou can't report yourself!"
   succesfullyReported: "&aSuccessfully reported <reported> for <reason>"
