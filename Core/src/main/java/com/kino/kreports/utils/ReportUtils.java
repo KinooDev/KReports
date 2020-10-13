@@ -60,13 +60,14 @@ public class ReportUtils {
 
                     StringBuilder builder = new StringBuilder();
 
+                    String commentFormatter = messages.getString("report.format.comments.base");
                     for (int i = 0; i < report.getComments().size(); i++) {
-                        builder.append(report.getComments().get(i));
+                        builder.append(commentFormatter.replace("<id>", (i + 1) + "").replace("<comment>", report.getComments().get(i)));
 
-                        if (i == report.getComments().size() - 1) {
-                            builder.append(".");
+                        if (i == 3) {
+                            builder.append(". ").append(messages.getString("report.format.comments.seeMore"));
                         } else {
-                            builder.append(", ");
+                            builder.append("; ");
                         }
                     }
 
@@ -177,5 +178,12 @@ public class ReportUtils {
         report.setPriority(reportPriority);
         MessageUtils.sendMessage(sender, messages.getString("report.changePriority").replace("<uuid>", uuid.toString()).replace("<priority>",
                 old.name()).replace("<newpriority>", reportPriority.name()));
+    }
+
+    public void changeState (CommandSender sender, Report report, ReportState state, UUID uuid) {
+        ReportPriority old = report.getPriority();
+        report.setState(state);
+        MessageUtils.sendMessage(sender, messages.getString("report.changeState").replace("<uuid>", uuid.toString()).replace("<state>",
+                old.name()).replace("<newstate>", state.name()));
     }
 }
