@@ -1,7 +1,7 @@
 package com.kino.kreports.models.reports;
 
-import com.kino.kreports.utils.ReportPriority;
-import com.kino.kreports.utils.ReportState;
+import com.kino.kreports.utils.report.ReportPriority;
+import com.kino.kreports.utils.report.ReportState;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -22,7 +22,8 @@ public class Report implements ConfigurationSerializable {
 
     @Getter @Setter private String reason;
 
-    @Getter @Setter private boolean accepted = false;
+    @Getter @Setter private boolean accepted;
+    @Getter @Setter private UUID accepter = null;
 
     @Getter @Setter private List<String> comments;
     @Getter @Setter private List<UUID> staffInspection;
@@ -30,6 +31,10 @@ public class Report implements ConfigurationSerializable {
     @Getter private final Date date;
 
     public Report (UUID reported, UUID reporter, String reason) {
+        this(reported, reporter, reason, false, null);
+    }
+
+    public Report (UUID reported, UUID reporter, String reason, boolean accepted, UUID accepter) {
         this.priority = ReportPriority.MEDIUM;
         this.state = ReportState.PAUSED;
 
@@ -37,6 +42,9 @@ public class Report implements ConfigurationSerializable {
         this.reporter = reporter;
 
         this.reason = reason;
+
+        this.accepted = accepted;
+        this.accepter = accepter;
 
         this.comments = new ArrayList<>();
         this.staffInspection = new ArrayList<>();
@@ -53,6 +61,9 @@ public class Report implements ConfigurationSerializable {
         this.reporter = UUID.fromString((String) map.get("reporter"));
 
         this.reason = (String) map.get("reason");
+
+        this.accepted = Boolean.getBoolean((String) map.get("accepted"));
+        this.accepter = UUID.fromString((String) map.get("accepter"));
 
         this.comments = (List<String>) map.get("comments");
 
@@ -87,6 +98,8 @@ public class Report implements ConfigurationSerializable {
         reportMap.put("reported", reported.toString());
         reportMap.put("reporter", reporter.toString());
         reportMap.put("reason", reason);
+        reportMap.put("accepted", accepted);
+        reportMap.put("accepter", accepter);
         reportMap.put("comments", comments);
         reportMap.put("staffInspection", staffInspection);
         reportMap.put("date", new SimpleDateFormat("MMM dd,yyyy HH:mm").format(date));

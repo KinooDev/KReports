@@ -57,4 +57,6 @@ public class SimpleUser implements User {
     public int hashCode() {
         return Objects.hash(kicks, mutes, warns, bans, reports);
     }
+
+
 }

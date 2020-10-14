@@ -1,6 +1,6 @@
 package com.kino.kreports.ebcm.provider;
 
-import com.kino.kreports.utils.ReportState;
+import com.kino.kreports.utils.report.ReportState;
 import me.fixeddev.ebcm.NamespaceAccesor;
 import me.fixeddev.ebcm.parameter.provider.SingleArgumentProvider;
 import me.fixeddev.ebcm.part.CommandPart;

@@ -1,4 +1,4 @@
-package com.kino.kreports.utils;
+package com.kino.kreports.utils.report;
 
 import com.kino.kore.utils.files.YMLFile;
 import com.kino.kore.utils.messages.MessageUtils;
@@ -10,18 +10,17 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import team.unnamed.inject.Inject;
 import team.unnamed.inject.InjectAll;
 import team.unnamed.inject.name.Named;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -97,32 +96,57 @@ public class ReportUtils {
         return formatter;
     }
 
-    private String formatComments (Report report) {
-        if (report !=null) {
-            StringBuilder builder = new StringBuilder();
-
-            //TODO: PAGE SYSTEM
-
-            String commentFormatter = messages.getString("report.format.comments.base");
-            for (int i = 0; i < report.getComments().size(); i++) {
-                builder.append(commentFormatter.replace("<id>", (i + 1) + "").replace("<comment>", report.getComments().get(i)));
-
-                if (i == report.getComments().size() - 1) {
-                    builder.append(".");
+    public void sendReportsOfPlayer (OfflinePlayer p, CommandSender receiver, boolean comments) {
+        sendReportListHeader(p, receiver);
+        for (Report report : sortReports(p)) {
+            for (String s : format(report, comments)) {
+                if (receiver instanceof Player) {
+                    Player player = (Player) receiver;
+                    TextComponent text = new TextComponent();
+                    text.setText(ChatColor.translateAlternateColorCodes('&', s));
+                    text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(messages.getString("report.format.hoverText")).create()));
+                    text.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, fromReport(report).toString()));
+                    player.spigot().sendMessage(text);
                 } else {
-                    builder.append(", ");
+                    MessageUtils.sendMessage(receiver, s);
                 }
             }
-
-            return builder.toString();
-        } else {
-            return "error";
         }
     }
 
-    public Report fromUUID (UUID uuid) {
+    public List<Report> sortReports (OfflinePlayer p) {
+        List<Report> list = new ArrayList<>();
 
-        return reportStorage.find(uuid).orElse(reportStorage.findFromData(uuid).orElse(null));
+        for (String sReportUUID : reportsData.getConfigurationSection("reports").getKeys(false)) {
+            UUID reportUUID = UUID.fromString(sReportUUID);
+            if (reportStorage.findFromData(reportUUID).isPresent()) {
+                Report report = reportStorage.findFromData(reportUUID).get();
+                if (report.getReported().equals(p.getUniqueId())) {
+                    list.add(report);
+                }
+            }
+        }
+
+        list.sort(new ReportComparator());
+
+        return list;
+    }
+
+    private void sendReportListHeader (OfflinePlayer p, CommandSender receiver) {
+        String reports;
+        if (playerStorage.find(p.getUniqueId()).isPresent()) {
+            reports = playerStorage.find(p.getUniqueId()).get().getReports().get() + "";
+        } else {
+            if (playerStorage.findFromData(p.getUniqueId()).isPresent()) {
+                reports = playerStorage.findFromData(p.getUniqueId()).get().getReports().get() + "";
+            } else {
+                reports = "error";
+            }
+        }
+
+        MessageUtils.sendMessage(receiver, messages.getString("report.format.header").replace(
+                "<player>", p.getName()).replace(
+                "<reports>", reports));
     }
 
     public void sendCommentsOfReport (UUID uuid, CommandSender receiver) {
@@ -144,46 +168,27 @@ public class ReportUtils {
                 "<comments>", comments));
     }
 
+    private String formatComments (Report report) {
+        if (report !=null) {
+            StringBuilder builder = new StringBuilder();
 
-    public void sendReportsOfPlayer (OfflinePlayer p, CommandSender receiver, boolean comments) {
-        sendReportListHeader(p, receiver);
-        for (String sReportUUID : reportsData.getConfigurationSection("reports").getKeys(false)) {
-            UUID reportUUID = UUID.fromString(sReportUUID);
-            if (reportStorage.findFromData(reportUUID).isPresent()){
-                Report report = reportStorage.findFromData(reportUUID).get();
-                if (report.getReported().equals(p.getUniqueId())) {
-                    for (String s : format(report, comments)) {
-                        if (receiver instanceof Player) {
-                            Player player = (Player) receiver;
-                            TextComponent text = new TextComponent();
-                            text.setText(ChatColor.translateAlternateColorCodes('&', s));
-                            text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(messages.getString("report.format.hoverText")).create()));
-                            text.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, reportUUID.toString()));
-                            player.spigot().sendMessage(text);
-                        } else {
-                            MessageUtils.sendMessage(receiver, s);
-                        }
-                    }
+            //TODO: PAGE SYSTEM
+
+            String commentFormatter = messages.getString("report.format.comments.base");
+            for (int i = 0; i < report.getComments().size(); i++) {
+                builder.append(commentFormatter.replace("<id>", (i + 1) + "").replace("<comment>", report.getComments().get(i)));
+
+                if (i == report.getComments().size() - 1) {
+                    builder.append(".");
+                } else {
+                    builder.append(", ");
                 }
             }
-        }
-    }
 
-    private void sendReportListHeader (OfflinePlayer p, CommandSender receiver) {
-        String reports;
-        if (playerStorage.find(p.getUniqueId()).isPresent()) {
-            reports = playerStorage.find(p.getUniqueId()).get().getReports().get() + "";
+            return builder.toString();
         } else {
-            if (playerStorage.findFromData(p.getUniqueId()).isPresent()) {
-                reports = playerStorage.findFromData(p.getUniqueId()).get().getReports().get() + "";
-            } else {
-                reports = "error";
-            }
+            return "error";
         }
-
-        MessageUtils.sendMessage(receiver, messages.getString("report.format.header").replace(
-                "<player>", p.getName()).replace(
-                "<reports>", reports));
     }
 
     public void broadcast (Report report) {
@@ -236,5 +241,31 @@ public class ReportUtils {
         report.setState(state);
         MessageUtils.sendMessage(sender, messages.getString("report.changeState").replace("<uuid>", uuid.toString()).replace("<state>",
                 old.name()).replace("<newstate>", state.name()));
+    }
+
+    public void accept (Player p, Report report, UUID uuid) {
+        report.accept();
+        report.setAccepter(p.getUniqueId());
+        MessageUtils.sendMessage(p, messages.getString("report.accept").replace("<uuid>", uuid.toString()));
+    }
+
+    public Report fromUUID (UUID uuid) {
+
+        return reportStorage.find(uuid).orElse(reportStorage.findFromData(uuid).orElse(null));
+    }
+
+    public UUID fromReport (Report report) {
+
+        for (String sReportUUID : reportsData.getConfigurationSection("reports").getKeys(false)) {
+            UUID reportUUID = UUID.fromString(sReportUUID);
+            if (reportStorage.findFromData(reportUUID).isPresent()) {
+                Report report1 = reportStorage.findFromData(reportUUID).get();
+                if (report.equals(report1)) {
+                    return reportUUID;
+                }
+            }
+        }
+
+        return null;
     }
 }

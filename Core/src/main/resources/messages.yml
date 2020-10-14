@@ -17,6 +17,8 @@ report:
   changePriority: "&bYou changed the priority of '&e<uuid>&b' from &a<priority> &bto &a<newpriority>&b."
   changeState: "&bYou changed the state of '&e<uuid>&b' from &a<state> &bto &a<newstate>&b."
   addComment: "&aSuccessfully added the comment!"
+  accept: "&aYou have accepted &e<uuid>&a!"
+  cantEditWhenAccepted: "&cYou can't edit this report because it is already accepted!"
   format:
     header: "&3Reports of <player> (total: <reports>): "
     #The <comments> could not exist, and it is shown as: %comment%, %comment2%, %comment3%...

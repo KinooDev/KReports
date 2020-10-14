@@ -1,8 +1,7 @@
 package com.kino.kreports.commands.staff;
 
 import com.kino.kore.utils.messages.MessageUtils;
-import com.kino.kreports.utils.ReportUtils;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.kino.kreports.utils.report.ReportUtils;
 import me.fixeddev.ebcm.parametric.CommandClass;
 import me.fixeddev.ebcm.parametric.annotation.ACommand;
 import me.fixeddev.ebcm.parametric.annotation.Injected;

@@ -117,4 +117,6 @@ public class Staff extends SimpleUser {
     public int hashCode() {
         return Objects.hash(super.hashCode(), kicksStaff, mutesStaff, warnsStaff, bansStaff, reportsStaff);
     }
+
+
 }

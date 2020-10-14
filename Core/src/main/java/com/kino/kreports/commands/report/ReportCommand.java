@@ -1,12 +1,11 @@
 package com.kino.kreports.commands.report;
 
-import com.kino.kore.utils.JavaUtils;
 import com.kino.kore.utils.files.YMLFile;
 import com.kino.kore.utils.messages.MessageUtils;
 import com.kino.kore.utils.storage.Storage;
 import com.kino.kreports.models.reports.Report;
 import com.kino.kreports.models.user.User;
-import com.kino.kreports.utils.ReportUtils;
+import com.kino.kreports.utils.report.ReportUtils;
 import me.fixeddev.ebcm.parametric.CommandClass;
 import me.fixeddev.ebcm.parametric.annotation.*;
 import org.apache.commons.lang.StringUtils;

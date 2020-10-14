@@ -9,6 +9,7 @@ import java.util.Map;
 public interface User extends ConfigurationSerializable, Statistic {
 
 
+
     @Override
     default Map<String, Object> serialize() {
         Map<String, Object> playerMap = new LinkedHashMap<>();

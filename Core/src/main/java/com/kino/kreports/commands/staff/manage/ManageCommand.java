@@ -1,11 +1,10 @@
 package com.kino.kreports.commands.staff.manage;
 
 import com.kino.kreports.commands.staff.manage.subcommands.ManageReportSubCommand;
-import com.kino.kreports.utils.ReportUtils;
+import com.kino.kreports.utils.report.ReportUtils;
 import me.fixeddev.ebcm.parametric.CommandClass;
 import me.fixeddev.ebcm.parametric.annotation.ACommand;
 import me.fixeddev.ebcm.parametric.annotation.SubCommandClasses;
-import org.bukkit.ChatColor;
 import team.unnamed.inject.InjectAll;
 
 @InjectAll

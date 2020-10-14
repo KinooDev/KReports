@@ -1,4 +1,4 @@
-package com.kino.kreports.utils;
+package com.kino.kreports.utils.report;
 
 public enum ReportState {
 

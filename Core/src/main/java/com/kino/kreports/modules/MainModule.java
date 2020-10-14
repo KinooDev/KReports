@@ -24,6 +24,7 @@ public class MainModule extends AbstractModule {
         install(new ServicesModule());
         install(new StorageModule());
         install(new ReportModule());
+        install(new UserModule());
 
 
         bind(KReports.class).toInstance(kReports);
