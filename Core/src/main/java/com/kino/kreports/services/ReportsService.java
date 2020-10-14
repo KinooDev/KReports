@@ -14,7 +14,7 @@ public class ReportsService implements Service {
 
     @Override
     public void start() {
-        reportStorage.loadAll();
+
     }
 
     @Override

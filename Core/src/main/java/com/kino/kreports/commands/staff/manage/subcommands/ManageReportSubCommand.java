@@ -31,8 +31,8 @@ public class ManageReportSubCommand implements CommandClass {
     @ACommand(names = {"addcomment"}, desc = "Add a comment to a report", permission = "kreports.commands.staff.manage.reports.addcomment")
     public boolean executeAddComment (@Injected(true) CommandSender sender, UUID uuid, @ConsumedArgs(-1) String comment) {
 
-        if (reportStorage.find(uuid).isPresent()) {
-            Report report = reportStorage.find(uuid).get();
+        if (reportStorage.findFromData(uuid).isPresent()) {
+            Report report = reportStorage.findFromData(uuid).get();
             reportUtils.addComment(sender, comment, report);
 
         } else {
@@ -47,8 +47,8 @@ public class ManageReportSubCommand implements CommandClass {
     @ACommand(names = {"setpriority", "changepriority"}, desc = "Change the priority of a report", permission = "kreports.commands.staff.manage.reports.set.priority")
     public boolean executeChangeReportPriority (@Injected(true) CommandSender sender, UUID uuid, ReportPriority priority) {
 
-        if (reportStorage.find(uuid).isPresent()) {
-            Report report = reportStorage.find(uuid).get();
+        if (reportStorage.findFromData(uuid).isPresent()) {
+            Report report = reportStorage.findFromData(uuid).get();
             reportUtils.changePriority(sender, report, priority, uuid);
         } else {
             MessageUtils.sendMessage(sender, messages.getString("invalidPriority"));
@@ -62,8 +62,8 @@ public class ManageReportSubCommand implements CommandClass {
     @ACommand(names = {"setstate", "changestate"}, desc = "Change the state of a report", permission = "kreports.commands.staff.manage.reports.set.state")
     public boolean executeChangeReportState (@Injected(true) CommandSender sender, UUID uuid, ReportState state) {
 
-        if (reportStorage.find(uuid).isPresent()) {
-            Report report = reportStorage.find(uuid).get();
+        if (reportStorage.findFromData(uuid).isPresent()) {
+            Report report = reportStorage.findFromData(uuid).get();
             reportUtils.changeState(sender, report, state, uuid);
         } else {
             MessageUtils.sendMessage(sender, messages.getString("invalidState"));

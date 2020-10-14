@@ -36,16 +36,20 @@ public class ReportUtils {
     @Named("messages")
     private YMLFile messages;
 
-    public List<String> format (Report report, boolean comments) {
+    @Named("reports_data")
+    private YMLFile reportsData;
+
+    private List<String> format (Report report, boolean comments) {
         List<String> formatter = messages.getStringList("report.format.info");
 
-        for (UUID uuid : reportStorage.get().keySet()) {
-            if (reportStorage.find(uuid).isPresent()){
-                if (reportStorage.find(uuid).get().equals(report)) {
+        for (String sReportUUID : reportsData.getConfigurationSection("reports").getKeys(false)) {
+            UUID uuid = UUID.fromString(sReportUUID);
+            if (reportStorage.findFromData(uuid).isPresent()) {
+                if (reportStorage.findFromData(uuid).get().equals(report)) {
                     formatter.replaceAll(s -> ChatColor.translateAlternateColorCodes('&', s.replace(
                             "<uuid>", uuid.toString()
-                            ).replace(
-                                    "<date>", new SimpleDateFormat("MMM dd,yyyy HH:mm").format(report.getDate())
+                    ).replace(
+                            "<date>", new SimpleDateFormat("MMM dd,yyyy HH:mm").format(report.getDate())
                     ).replace(
                             "<reporter>", Bukkit.getOfflinePlayer(report.getReporter()).getName()
                     ).replace(
@@ -71,14 +75,14 @@ public class ReportUtils {
                         }
                     }
 
-                    if(comments && !report.getComments().isEmpty()) {
+                    if (comments && !report.getComments().isEmpty()) {
                         formatter.replaceAll(s -> ChatColor.translateAlternateColorCodes('&', s).replace(
                                 "<comments>", builder.toString()));
                     } else {
                         List<String> list = new ArrayList<>();
 
                         for (String s : formatter) {
-                            if(ChatColor.stripColor(s).equals("<comments>")) {
+                            if (ChatColor.stripColor(s).equals("<comments>")) {
                                 continue;
                             }
 
@@ -93,13 +97,60 @@ public class ReportUtils {
         return formatter;
     }
 
+    private String formatComments (Report report) {
+        if (report !=null) {
+            StringBuilder builder = new StringBuilder();
+
+            //TODO: PAGE SYSTEM
+
+            String commentFormatter = messages.getString("report.format.comments.base");
+            for (int i = 0; i < report.getComments().size(); i++) {
+                builder.append(commentFormatter.replace("<id>", (i + 1) + "").replace("<comment>", report.getComments().get(i)));
+
+                if (i == report.getComments().size() - 1) {
+                    builder.append(".");
+                } else {
+                    builder.append(", ");
+                }
+            }
+
+            return builder.toString();
+        } else {
+            return "error";
+        }
+    }
+
+    public Report fromUUID (UUID uuid) {
+
+        return reportStorage.find(uuid).orElse(reportStorage.findFromData(uuid).orElse(null));
+    }
+
+    public void sendCommentsOfReport (UUID uuid, CommandSender receiver) {
+        sendCommentsListHeader(uuid, receiver);
+        MessageUtils.sendMessage(receiver, formatComments(fromUUID(uuid)));
+    }
+
+    private void sendCommentsListHeader(UUID uuid, CommandSender receiver) {
+        String comments;
+        Report report = fromUUID(uuid);
+        if (report !=null) {
+            comments = report.getComments().size() + "";
+        } else {
+            comments = "error";
+        }
+
+        MessageUtils.sendMessage(receiver, messages.getString("report.format.comments.header").replace(
+                "<report>", uuid.toString()).replace(
+                "<comments>", comments));
+    }
 
 
     public void sendReportsOfPlayer (OfflinePlayer p, CommandSender receiver, boolean comments) {
         sendReportListHeader(p, receiver);
-        for (UUID reportUUID : reportStorage.get().keySet()) {
-            if (reportStorage.find(reportUUID).isPresent()){
-                Report report = reportStorage.find(reportUUID).get();
+        for (String sReportUUID : reportsData.getConfigurationSection("reports").getKeys(false)) {
+            UUID reportUUID = UUID.fromString(sReportUUID);
+            if (reportStorage.findFromData(reportUUID).isPresent()){
+                Report report = reportStorage.findFromData(reportUUID).get();
                 if (report.getReported().equals(p.getUniqueId())) {
                     for (String s : format(report, comments)) {
                         if (receiver instanceof Player) {

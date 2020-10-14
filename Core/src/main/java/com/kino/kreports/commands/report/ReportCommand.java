@@ -51,7 +51,11 @@ public class ReportCommand implements CommandClass {
                     if (playerStorage.find(p.getUniqueId()).isPresent()) {
                         playerStorage.find(p.getUniqueId()).get().getReports().add(1);
                     }
-                    reportStorage.add(UUID.randomUUID(), report);
+
+                    UUID uuid = UUID.randomUUID();
+
+                    reportStorage.add(uuid, report);
+                    reportStorage.save(uuid);
                     reportUtils.broadcast(report);
                     MessageUtils.sendMessage(player, messages.getString("report.succesfullyReported").replace(
                             "<reason>", reason).replace(

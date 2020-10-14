@@ -27,6 +27,7 @@ report:
       - "&a<comments>"
       - "&m&b------------------------------"
     comments:
+      header: "&3Comments of <report> (total: <comments>): "
       base: "&e<id>. &a<comment>"
       #<uuid> is not a variable!
       seeMore: "&cTo see more use /check comments <uuid>."
