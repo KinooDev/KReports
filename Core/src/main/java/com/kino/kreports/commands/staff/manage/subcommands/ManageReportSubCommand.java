@@ -107,8 +107,31 @@ public class ManageReportSubCommand implements CommandClass {
                 } else {
                     MessageUtils.sendMessage(sender, messages.getString("report.cantEditWhenAccepted"));
                 }
-            } else {
-                MessageUtils.sendMessage(sender, messages.getString("invalidState"));
+            }
+        } else {
+            MessageUtils.sendMessage(sender, "&cThis command is only for players!");
+        }
+
+        return true;
+
+    }
+
+    @ACommand(names = {"unaccept"}, desc = "Unaccept a report", permission = "kreports.commands.staff.manage.reports.unaccept")
+    public boolean executeUnacceptReport (@Injected(true) CommandSender sender, UUID uuid) {
+
+        if (sender instanceof Player) {
+            Player p = (Player) sender;
+            if (reportStorage.findFromData(uuid).isPresent()) {
+                Report report = reportStorage.findFromData(uuid).get();
+                if (report.isAccepted()) {
+                    if (userUtils.isStaff(userUtils.fromUUID(report.getAccepter()))) {
+                        Staff staff = (Staff) userUtils.fromUUID(report.getAccepter());
+                        staff.getReportsStaff().remove(1);
+                    }
+                    reportUtils.unaccept(p, report, uuid);
+                } else {
+                    MessageUtils.sendMessage(sender, messages.getString("report.notAccepted"));
+                }
             }
         } else {
             MessageUtils.sendMessage(sender, "&cThis command is only for players!");

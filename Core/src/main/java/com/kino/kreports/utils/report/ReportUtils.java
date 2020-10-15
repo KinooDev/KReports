@@ -19,10 +19,7 @@ import team.unnamed.inject.InjectAll;
 import team.unnamed.inject.name.Named;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @InjectAll
 public class ReportUtils {
@@ -249,13 +246,33 @@ public class ReportUtils {
         MessageUtils.sendMessage(p, messages.getString("report.accept").replace("<uuid>", uuid.toString()));
     }
 
+    public void unaccept (Player p, Report report, UUID uuid) {
+        report.unaccept();
+        report.setAccepter(null);
+        MessageUtils.sendMessage(p, messages.getString("report.unaccept").replace("<uuid>", uuid.toString()));
+    }
+
+    public void addInspector (Player p, Report report, UUID uuid) {
+        for (UUID uuid1 : getAllReports().keySet()) {
+            if (getAllReports().get(uuid1).getStaffInspection().contains(p.getUniqueId())) {
+                MessageUtils.sendMessage(p, messages.getString("report.inspection.alreadyInspecting").replace("<uuid>", uuid1.toString()));
+                return;
+            }
+        }
+
+        report.addInspector(p.getUniqueId());
+        if ((Bukkit.getPlayer(report.getReported()) !=null) && (Bukkit.getPlayer(report.getReported()).isOnline())) {
+            p.teleport(Bukkit.getPlayer(report.getReported()).getLocation());
+        }
+        MessageUtils.sendMessage(p, messages.getString("report.inspection.nowInspecting").replace("<uuid>", uuid.toString()));
+    }
+
     public Report fromUUID (UUID uuid) {
 
         return reportStorage.find(uuid).orElse(reportStorage.findFromData(uuid).orElse(null));
     }
 
     public UUID fromReport (Report report) {
-
         for (String sReportUUID : reportsData.getConfigurationSection("reports").getKeys(false)) {
             UUID reportUUID = UUID.fromString(sReportUUID);
             if (reportStorage.findFromData(reportUUID).isPresent()) {
@@ -267,5 +284,21 @@ public class ReportUtils {
         }
 
         return null;
+    }
+
+    public Map<UUID, Report> getAllReports () {
+        Map<UUID, Report> reports = new HashMap<>();
+        for (String sReportUUID : reportsData.getConfigurationSection("reports").getKeys(false)) {
+            UUID uuid = UUID.fromString(sReportUUID);
+            if (reportStorage.findFromData(uuid).isPresent()) {
+                reports.put(uuid, reportStorage.findFromData(uuid).get());
+            }
+        }
+        for (UUID uuid1 : reportStorage.get().keySet()) {
+            if (reportStorage.find(uuid1).isPresent()) {
+                reports.put(uuid1, reportStorage.find(uuid1).get());
+            }
+        }
+        return reports;
     }
 }

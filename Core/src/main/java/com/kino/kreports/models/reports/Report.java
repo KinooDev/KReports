@@ -23,7 +23,7 @@ public class Report implements ConfigurationSerializable {
     @Getter @Setter private String reason;
 
     @Getter @Setter private boolean accepted;
-    @Getter @Setter private UUID accepter = null;
+    @Getter @Setter private UUID accepter;
 
     @Getter @Setter private List<String> comments;
     @Getter @Setter private List<UUID> staffInspection;
@@ -82,11 +82,27 @@ public class Report implements ConfigurationSerializable {
 
     public void addInspector (UUID uuid) {
         staffInspection.add(uuid);
+        setState(ReportState.INSPECTION);
+    }
+
+    public void removeInspector (UUID uuid) {
+        staffInspection.remove(uuid);
+        if (staffInspection.isEmpty()) {
+            setState(ReportState.PAUSED);
+        }
     }
 
     public void accept () {
+        for (UUID uuid : staffInspection) {
+            removeInspector(uuid);
+        }
         this.accepted = true;
         this.state = ReportState.ARCHIVED;
+    }
+
+    public void unaccept () {
+        this.accepted = false;
+        this.state = ReportState.PAUSED;
     }
 
     @Override
