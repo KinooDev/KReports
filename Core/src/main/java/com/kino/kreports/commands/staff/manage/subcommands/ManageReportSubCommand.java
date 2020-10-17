@@ -64,7 +64,7 @@ public class ManageReportSubCommand implements CommandClass {
             }
 
         } else {
-            MessageUtils.sendMessage(sender, messages.getString("invalidPriority"));
+            MessageUtils.sendMessage(sender, messages.getString("report.doesntExist"));
 
         }
 
@@ -83,7 +83,7 @@ public class ManageReportSubCommand implements CommandClass {
                 MessageUtils.sendMessage(sender, messages.getString("report.cantEditWhenAccepted"));
             }
         } else {
-            MessageUtils.sendMessage(sender, messages.getString("invalidState"));
+            MessageUtils.sendMessage(sender, messages.getString("report.doesntExist"));
 
         }
 
@@ -107,6 +107,9 @@ public class ManageReportSubCommand implements CommandClass {
                 } else {
                     MessageUtils.sendMessage(sender, messages.getString("report.cantEditWhenAccepted"));
                 }
+            } else {
+                MessageUtils.sendMessage(sender, messages.getString("report.doesntExist"));
+
             }
         } else {
             MessageUtils.sendMessage(sender, "&cThis command is only for players!");
@@ -132,6 +135,57 @@ public class ManageReportSubCommand implements CommandClass {
                 } else {
                     MessageUtils.sendMessage(sender, messages.getString("report.notAccepted"));
                 }
+            } else {
+                MessageUtils.sendMessage(sender, messages.getString("report.doesntExist"));
+
+            }
+        } else {
+            MessageUtils.sendMessage(sender, "&cThis command is only for players!");
+        }
+
+        return true;
+
+    }
+
+    @ACommand(names = {"startinspect", "inspect"}, desc = "Start inspecting a report", permission = "kreports.commands.staff.manage.reports.inspect.start")
+    public boolean executeInspect (@Injected(true) CommandSender sender, UUID uuid) {
+
+        if (sender instanceof Player) {
+            Player p = (Player) sender;
+            Report report = reportUtils.fromUUID(uuid);
+            if (report != null) {
+                if (!report.isAccepted()) {
+                    reportUtils.addInspector(p, report, uuid);
+                } else {
+                    MessageUtils.sendMessage(sender, messages.getString("report.cantEditWhenAccepted"));
+                }
+            } else {
+                MessageUtils.sendMessage(sender, messages.getString("report.doesntExist"));
+
+            }
+        } else {
+            MessageUtils.sendMessage(sender, "&cThis command is only for players!");
+        }
+
+        return true;
+
+    }
+
+    @ACommand(names = {"stopinspect", "uninspect"}, desc = "Stop inspecting a report", permission = "kreports.commands.staff.manage.reports.inspect.stop")
+    public boolean executeStopInspect (@Injected(true) CommandSender sender, UUID uuid) {
+
+        if (sender instanceof Player) {
+            Player p = (Player) sender;
+            Report report = reportUtils.fromUUID(uuid);
+            if (report != null) {
+                if (!report.isAccepted()) {
+                    reportUtils.removeInspector(p, report, uuid);
+                } else {
+                    MessageUtils.sendMessage(sender, messages.getString("report.cantEditWhenAccepted"));
+                }
+            } else {
+                MessageUtils.sendMessage(sender, messages.getString("report.doesntExist"));
+
             }
         } else {
             MessageUtils.sendMessage(sender, "&cThis command is only for players!");

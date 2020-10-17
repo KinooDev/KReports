@@ -29,6 +29,9 @@ public class ReportUtils {
 
     private Storage<UUID, Report> reportStorage;
 
+    @Named("config")
+    private YMLFile config;
+
     @Named("messages")
     private YMLFile messages;
 
@@ -260,11 +263,29 @@ public class ReportUtils {
             }
         }
 
+        if (config.getInt("reports.maxInspectors") !=-1) {
+            if (report.getStaffInspection().size() >= config.getInt("reports.maxInspectors")) {
+                MessageUtils.sendMessage(p, messages.getString("report.inspection.maxInspectorsReached").replace("<uuid>", uuid.toString()));
+                return;
+            }
+        }
+
         report.addInspector(p.getUniqueId());
         if ((Bukkit.getPlayer(report.getReported()) !=null) && (Bukkit.getPlayer(report.getReported()).isOnline())) {
             p.teleport(Bukkit.getPlayer(report.getReported()).getLocation());
         }
         MessageUtils.sendMessage(p, messages.getString("report.inspection.nowInspecting").replace("<uuid>", uuid.toString()));
+    }
+
+    public void removeInspector (Player p, Report report, UUID uuid) {
+
+        if (report.getStaffInspection().contains(p.getUniqueId())) {
+            report.removeInspector(p.getUniqueId());
+            MessageUtils.sendMessage(p, messages.getString("report.inspection.stopInspecting").replace("<uuid>", uuid.toString()));
+        } else {
+            MessageUtils.sendMessage(p, messages.getString("report.inspection.notInspecting").replace("<uuid>", uuid.toString()));
+        }
+
     }
 
     public Report fromUUID (UUID uuid) {

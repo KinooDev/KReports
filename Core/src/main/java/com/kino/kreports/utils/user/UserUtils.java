@@ -8,6 +8,8 @@ import com.kino.kreports.models.user.User;
 import team.unnamed.inject.InjectAll;
 import team.unnamed.inject.name.Named;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @InjectAll
@@ -42,5 +44,21 @@ public class UserUtils {
 
         return user instanceof Staff;
 
+    }
+
+    public Map<UUID, User> getAllUsers () {
+        Map<UUID, User> reports = new HashMap<>();
+        for (String sUserUUID : playerData.getConfigurationSection("users").getKeys(false)) {
+            UUID uuid = UUID.fromString(sUserUUID);
+            if (playerStorage.findFromData(uuid).isPresent()) {
+                reports.put(uuid, playerStorage.findFromData(uuid).get());
+            }
+        }
+        for (UUID uuid1 : playerStorage.get().keySet()) {
+            if (playerStorage.find(uuid1).isPresent()) {
+                reports.put(uuid1, playerStorage.find(uuid1).get());
+            }
+        }
+        return reports;
     }
 }

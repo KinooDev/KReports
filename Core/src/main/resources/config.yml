@@ -1,3 +1,5 @@
 #bungee: false
 reports:
+  #-1 is infinities inspectors
+  maxInspectors: 5
   defaultReason: "Hacking"
