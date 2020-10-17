@@ -62,8 +62,8 @@ public class Report implements ConfigurationSerializable {
 
         this.reason = (String) map.get("reason");
 
-        this.accepted = Boolean.getBoolean((String) map.get("accepted"));
-        this.accepter = UUID.fromString((String) map.get("accepter"));
+        this.accepted = (Boolean) map.get("accepted");
+        this.accepter = map.get("accepter") == null ? null : UUID.fromString((String) map.get("accepter"));
 
         this.comments = (List<String>) map.get("comments");
 
@@ -115,7 +115,7 @@ public class Report implements ConfigurationSerializable {
         reportMap.put("reporter", reporter.toString());
         reportMap.put("reason", reason);
         reportMap.put("accepted", accepted);
-        reportMap.put("accepter", accepter);
+        reportMap.put("accepter", accepter == null ? null : accepter.toString());
         reportMap.put("comments", comments);
         reportMap.put("staffInspection", staffInspection);
         reportMap.put("date", new SimpleDateFormat("MMM dd,yyyy HH:mm").format(date));

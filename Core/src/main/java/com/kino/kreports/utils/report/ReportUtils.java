@@ -69,6 +69,8 @@ public class ReportUtils {
 
                         if (i == 3) {
                             builder.append(". ").append(messages.getString("report.format.comments.seeMore"));
+                        } else if (i <= report.getComments().size() - 1) {
+                            builder.append(". ");
                         } else {
                             builder.append("; ");
                         }

@@ -39,6 +39,7 @@ public class ManageReportSubCommand implements CommandClass {
             Report report = reportStorage.findFromData(uuid).get();
             if (!report.isAccepted()) {
                 reportUtils.addComment(sender, comment, report);
+                reportStorage.saveObject(uuid, report);
             } else {
                 MessageUtils.sendMessage(sender, messages.getString("report.cantEditWhenAccepted"));
             }
@@ -59,6 +60,7 @@ public class ManageReportSubCommand implements CommandClass {
             Report report = reportStorage.findFromData(uuid).get();
             if (!report.isAccepted()) {
                 reportUtils.changePriority(sender, report, priority, uuid);
+                reportStorage.saveObject(uuid, report);
             } else {
                 MessageUtils.sendMessage(sender, messages.getString("report.cantEditWhenAccepted"));
             }
@@ -79,6 +81,7 @@ public class ManageReportSubCommand implements CommandClass {
             Report report = reportStorage.findFromData(uuid).get();
             if (!report.isAccepted()) {
                 reportUtils.changeState(sender, report, state, uuid);
+                reportStorage.saveObject(uuid, report);
             } else {
                 MessageUtils.sendMessage(sender, messages.getString("report.cantEditWhenAccepted"));
             }
@@ -104,6 +107,7 @@ public class ManageReportSubCommand implements CommandClass {
                         Staff staff = (Staff) userUtils.fromUUID(p.getUniqueId());
                         staff.getReportsStaff().add(1);
                     }
+                    reportStorage.saveObject(uuid, report);
                 } else {
                     MessageUtils.sendMessage(sender, messages.getString("report.cantEditWhenAccepted"));
                 }
@@ -132,6 +136,7 @@ public class ManageReportSubCommand implements CommandClass {
                         staff.getReportsStaff().remove(1);
                     }
                     reportUtils.unaccept(p, report, uuid);
+                    reportStorage.saveObject(uuid, report);
                 } else {
                     MessageUtils.sendMessage(sender, messages.getString("report.notAccepted"));
                 }
@@ -156,6 +161,7 @@ public class ManageReportSubCommand implements CommandClass {
             if (report != null) {
                 if (!report.isAccepted()) {
                     reportUtils.addInspector(p, report, uuid);
+                    reportStorage.saveObject(uuid, report);
                 } else {
                     MessageUtils.sendMessage(sender, messages.getString("report.cantEditWhenAccepted"));
                 }
@@ -180,6 +186,7 @@ public class ManageReportSubCommand implements CommandClass {
             if (report != null) {
                 if (!report.isAccepted()) {
                     reportUtils.removeInspector(p, report, uuid);
+                    reportStorage.saveObject(uuid, report);
                 } else {
                     MessageUtils.sendMessage(sender, messages.getString("report.cantEditWhenAccepted"));
                 }

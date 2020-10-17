@@ -57,7 +57,7 @@ public class ReportCommand implements CommandClass {
                     reportStorage.save(uuid);
                     reportUtils.broadcast(report);
                     MessageUtils.sendMessage(player, messages.getString("report.succesfullyReported").replace(
-                            "<reason>", reason).replace(
+                            "<reason>", report.getReason()).replace(
                             "<reported>", p.getName()));
                 } else {
                     MessageUtils.sendMessage(player, messages.getString("report.yourself"));

@@ -20,26 +20,12 @@ public class CheckCommand implements CommandClass {
     private ReportUtils reportUtils;
 
     @ACommand(names = {"reports", "report"}, desc = "Check player's reports", permission = "kreports.commands.staff.check.reports")
-    public boolean executeCheckReports (@Injected(true) CommandSender sender, @Optional OfflinePlayer target, @Optional Boolean comments) {
+    public boolean executeCheckReports (@Injected(true) CommandSender sender, OfflinePlayer target, @Optional Boolean comments) {
 
         if (comments == null) {
             comments = false;
         }
-        if (target == null) {
-            if (sender instanceof Player) {
-
-                Player p = (Player) sender;
-
-                reportUtils.sendReportsOfPlayer(p, p, comments);
-
-            } else {
-                MessageUtils.sendMessage(sender, "&cIf you use the console, add a name argument to the command");
-            }
-
-        } else {
-
-            reportUtils.sendReportsOfPlayer(target, sender, comments);
-        }
+        reportUtils.sendReportsOfPlayer(target, sender, comments);
         return true;
 
     }
