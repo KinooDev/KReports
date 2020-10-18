@@ -5,6 +5,7 @@ import com.kino.kore.utils.storage.Storage;
 import com.kino.kreports.models.reports.Report;
 import com.kino.kreports.models.user.Staff;
 import com.kino.kreports.models.user.User;
+import com.eatthepath.uuid.FastUUID;
 import team.unnamed.inject.InjectAll;
 import team.unnamed.inject.name.Named;
 
@@ -28,7 +29,7 @@ public class UserUtils {
     public UUID fromReport (User user) {
 
         for (String sUserUUID : playerData.getConfigurationSection("users").getKeys(false)) {
-            UUID userUUID = UUID.fromString(sUserUUID);
+            UUID userUUID = FastUUID.parseUUID(sUserUUID);
             if (playerStorage.findFromData(userUUID).isPresent()) {
                 User user1 = playerStorage.findFromData(userUUID).get();
                 if (user.equals(user1)) {
@@ -49,7 +50,7 @@ public class UserUtils {
     public Map<UUID, User> getAllUsers () {
         Map<UUID, User> reports = new HashMap<>();
         for (String sUserUUID : playerData.getConfigurationSection("users").getKeys(false)) {
-            UUID uuid = UUID.fromString(sUserUUID);
+            UUID uuid = FastUUID.parseUUID(sUserUUID);
             if (playerStorage.findFromData(uuid).isPresent()) {
                 reports.put(uuid, playerStorage.findFromData(uuid).get());
             }
