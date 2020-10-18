@@ -242,7 +242,7 @@ public class ReportUtils {
     public void changeState (CommandSender sender, Report report, ReportState state, UUID uuid) {
         ReportPriority old = report.getPriority();
         report.setState(state);
-        MessageUtils.sendMessage(sender, messages.getString("report.changeState").replace("<uuid>", FastUUID.toString()).replace("<state>",
+        MessageUtils.sendMessage(sender, messages.getString("report.changeState").replace("<uuid>", FastUUID.toString(uuid)).replace("<state>",
                 old.name()).replace("<newstate>", state.name()));
     }
 
