@@ -1,4 +1,7 @@
 #bungee: false
+storage:
+  #YML, MONGODB
+  type: "YML"
 reports:
   #-1 is infinities inspectors
   maxInspectors: 5

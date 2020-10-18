@@ -14,6 +14,8 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 public class Report implements ConfigurationSerializable {
 
+    @Getter @Setter private int id;
+    @Getter private final UUID uuid;
 
     @Getter @Setter private ReportPriority priority;
     @Getter @Setter private ReportState state;
@@ -21,7 +23,7 @@ public class Report implements ConfigurationSerializable {
     @Getter private final UUID reported;
     @Getter private final UUID reporter;
 
-    @Getter @Setter private String reason;
+    @Getter private final String reason;
 
     @Getter @Setter private boolean accepted;
     @Getter @Setter private UUID accepter;
@@ -36,6 +38,9 @@ public class Report implements ConfigurationSerializable {
     }
 
     public Report (UUID reported, UUID reporter, String reason, boolean accepted, UUID accepter) {
+        this.id = -1;
+        this.uuid = UUID.randomUUID();
+
         this.priority = ReportPriority.MEDIUM;
         this.state = ReportState.PAUSED;
 
@@ -55,6 +60,9 @@ public class Report implements ConfigurationSerializable {
 
 
     public Report (Map<String, Object> map) {
+        //this.id = (int) map.get("id");
+        this.uuid = FastUUID.parseUUID((String) map.get("uuid"));
+
         this.priority = ReportPriority.valueOf((String) map.get("priority"));
         this.state = ReportState.valueOf((String) map.get("state"));
 
@@ -110,13 +118,15 @@ public class Report implements ConfigurationSerializable {
     public Map<String, Object> serialize() {
         Map<String, Object> reportMap = new LinkedHashMap<>();
 
+        //reportMap.put("id", id);
+        reportMap.put("uuid", FastUUID.toString(uuid));
         reportMap.put("priority", priority.name());
         reportMap.put("state", state.name());
-        reportMap.put("reported", reported.toString());
-        reportMap.put("reporter", reporter.toString());
+        reportMap.put("reported", FastUUID.toString(reported));
+        reportMap.put("reporter", FastUUID.toString(reporter));
         reportMap.put("reason", reason);
         reportMap.put("accepted", accepted);
-        reportMap.put("accepter", accepter == null ? null : accepter.toString());
+        reportMap.put("accepter", accepter == null ? null : FastUUID.toString(accepter));
         reportMap.put("comments", comments);
         reportMap.put("staffInspection", staffInspection);
         reportMap.put("date", new SimpleDateFormat("MMM dd,yyyy HH:mm").format(date));

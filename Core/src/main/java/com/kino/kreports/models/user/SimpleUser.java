@@ -1,14 +1,19 @@
 package com.kino.kreports.models.user;
 
+import com.eatthepath.uuid.FastUUID;
 import com.kino.kreports.stats.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 public class SimpleUser implements User {
 
+    protected int id;
+    protected final UUID uuid;
 
     protected IntegerStat kicks;
     protected IntegerStat mutes;
@@ -18,6 +23,9 @@ public class SimpleUser implements User {
 
 
     public SimpleUser() {
+        id = -1;
+        uuid = UUID.randomUUID();
+
         kicks = new IntegerStat();
         mutes = new IntegerStat();
         warns = new IntegerStat();
@@ -26,6 +34,9 @@ public class SimpleUser implements User {
     }
 
     public SimpleUser(User user) {
+        id = user.getID();
+        uuid = user.getUUID();
+
         kicks = user.getKicks();
         mutes = user.getMutes();
         warns = user.getWarns();
@@ -34,6 +45,8 @@ public class SimpleUser implements User {
     }
 
     public SimpleUser(Map<String, Object> userMap) {
+        //id = (int) userMap.get("id");
+        uuid = FastUUID.parseUUID((String) userMap.get("uuid"));
         kicks = new IntegerStat((Integer) userMap.get("kicks"));
         mutes = new IntegerStat((Integer) userMap.get("mutes"));
         warns = new IntegerStat((Integer) userMap.get("warns"));
@@ -59,4 +72,18 @@ public class SimpleUser implements User {
     }
 
 
+    @Override
+    public UUID getUUID() {
+        return uuid;
+    }
+
+    @Override
+    public int getID() {
+        return id;
+    }
+
+    @Override
+    public void setID(int id) {
+        this.id = id;
+    }
 }

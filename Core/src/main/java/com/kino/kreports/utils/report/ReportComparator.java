@@ -40,4 +40,29 @@ public class ReportComparator implements Comparator<Report> {
                 1 : report.getState().ordinal() == 1 && report2.getState().ordinal() == 0 ?
                 -1 :  report.getState().ordinal() == 1 && report2.getState().ordinal() == 2 ? 1 : -1;
     }
+
+
+    /*
+    Collections.sort(reports, Comparator.comparing(Report::isAccepted)
+  .thenComparing((reportOne, reportTwo) -> {
+    ReportState stateOne = reportOne.getState();
+    ReportState stateTwo = reportTwo.getState();
+
+    if (stateOne != stateTwo) {
+      switch(stateOne) {
+        case WAITING: {
+          if (stateTwo != ANOTHER) {
+            return 1;
+          }
+
+          return -1;
+        }
+      }
+    } //más mamadas
+  })
+  .thenComparing(Report::getPriority))
+  .thenComparing((reportOne, reportTwo) -> {
+    comparas las fechas con respecto a la actual con Date#after() si es que usas eso si no te chingas
+  })
+     */
 }

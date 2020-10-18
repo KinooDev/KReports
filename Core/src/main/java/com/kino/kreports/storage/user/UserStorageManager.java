@@ -51,7 +51,7 @@ public class UserStorageManager implements Storage<UUID, User> {
             } else {
                 return Optional.of(new SimpleUser(map));
             }
-        } else if (o instanceof ConfigurationSection) {
+        } /*else if (o instanceof ConfigurationSection) {
             if(((ConfigurationSection) o).contains("staff")) {
                 return Optional.of(
                         new Staff(
@@ -65,7 +65,7 @@ public class UserStorageManager implements Storage<UUID, User> {
                         )
                 );
             }
-        } else {
+        }*/ else {
             return Optional.empty();
         }
     }

@@ -5,10 +5,15 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public interface User extends ConfigurationSerializable, Statistic {
 
+    UUID getUUID();
 
+    int getID();
+
+    void setID(int id);
 
     @Override
     default Map<String, Object> serialize() {

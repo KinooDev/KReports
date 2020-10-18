@@ -14,11 +14,15 @@ public class MainModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        YMLFile config;
         FileBinder fileBinder = new FileBinder()
-                .bind("config", new YMLFile(kReports, "config"))
-                .bind("messages", new YMLFile(kReports, "messages"))
-                .bind("user_data", new YMLFile(kReports, "user_data"))
-                .bind("reports_data", new YMLFile(kReports, "reports_data"));
+                        .bind("config", config = new YMLFile(kReports, "config"))
+                        .bind("messages", new YMLFile(kReports, "messages"));
+
+        /*if (config.getString("storage.type").equalsIgnoreCase("YML")) {
+            fileBinder.bind("user_data", new YMLFile(kReports, "user_data"))
+                    .bind("reports_data", new YMLFile(kReports, "reports_data"));
+        }*/
 
         install(fileBinder.build());
         install(new ServicesModule());

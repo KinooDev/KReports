@@ -1,18 +1,18 @@
 package com.kino.kreports.models.user;
 
 
+import com.eatthepath.uuid.FastUUID;
 import com.kino.kreports.stats.*;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @SuppressWarnings("unchecked")
 public class Staff extends SimpleUser {
+
 
     private IntegerStat kicksStaff;
     private IntegerStat mutesStaff;
@@ -21,11 +21,7 @@ public class Staff extends SimpleUser {
     private IntegerStat reportsStaff;
 
     public Staff() {
-        kicks = new IntegerStat();
-        mutes = new IntegerStat();
-        warns = new IntegerStat();
-        bans = new IntegerStat();
-        reports = new IntegerStat();
+        super();
 
         kicksStaff = new IntegerStat();
         mutesStaff = new IntegerStat();
@@ -35,11 +31,7 @@ public class Staff extends SimpleUser {
     }
 
     public Staff (SimpleUser user) {
-        kicks = user.getKicks();
-        mutes = user.getMutes();
-        warns = user.getWarns();
-        bans = user.getBans();
-        reports = user.getReports();
+        super(user);
 
         kicksStaff = new IntegerStat();
         mutesStaff = new IntegerStat();
@@ -49,28 +41,9 @@ public class Staff extends SimpleUser {
     }
 
     public Staff(Map<String, Object> userMap) {
-        kicks = new IntegerStat((Integer) userMap.get("kicks"));
-        mutes = new IntegerStat((Integer) userMap.get("mutes"));
-        warns = new IntegerStat((Integer) userMap.get("warns"));
-        bans = new IntegerStat((Integer) userMap.get("bans"));
-        reports = new IntegerStat((Integer) userMap.get("reports"));
+        super(userMap);
 
         Map<String, Object> staffMap = (Map<String, Object>) userMap.get("staff");
-        kicksStaff = new IntegerStat((Integer) staffMap.get("kicks"));
-        mutesStaff = new IntegerStat((Integer) staffMap.get("mutes"));
-        warnsStaff = new IntegerStat((Integer) staffMap.get("warns"));
-        bansStaff = new IntegerStat((Integer) staffMap.get("bans"));
-        reportsStaff = new IntegerStat((Integer) staffMap.get("reports"));
-    }
-
-    public Staff(ConfigurationSection configurationSection) {
-        kicks = new IntegerStat(configurationSection.getInt("kicks"));
-        mutes = new IntegerStat(configurationSection.getInt("mutes"));
-        warns = new IntegerStat(configurationSection.getInt("warns"));
-        bans = new IntegerStat(configurationSection.getInt("bans"));
-        reports = new IntegerStat(configurationSection.getInt("reports"));
-
-        Map<String, Object> staffMap = configurationSection.getConfigurationSection("staff").getValues(false);
         kicksStaff = new IntegerStat((Integer) staffMap.get("kicks"));
         mutesStaff = new IntegerStat((Integer) staffMap.get("mutes"));
         warnsStaff = new IntegerStat((Integer) staffMap.get("warns"));
@@ -117,6 +90,4 @@ public class Staff extends SimpleUser {
     public int hashCode() {
         return Objects.hash(super.hashCode(), kicksStaff, mutesStaff, warnsStaff, bansStaff, reportsStaff);
     }
-
-
 }
