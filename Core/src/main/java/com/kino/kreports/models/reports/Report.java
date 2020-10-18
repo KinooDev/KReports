@@ -2,6 +2,7 @@ package com.kino.kreports.models.reports;
 
 import com.kino.kreports.utils.report.ReportPriority;
 import com.kino.kreports.utils.report.ReportState;
+import com.eatthepath.uuid.FastUUID;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -57,8 +58,8 @@ public class Report implements ConfigurationSerializable {
         this.priority = ReportPriority.valueOf((String) map.get("priority"));
         this.state = ReportState.valueOf((String) map.get("state"));
 
-        this.reported = UUID.fromString((String) map.get("reported"));
-        this.reporter = UUID.fromString((String) map.get("reporter"));
+        this.reported = FastUUID.parseUUID((String) map.get("reported"));
+        this.reporter = FastUUID.parseUUID((String) map.get("reporter"));
 
         this.reason = (String) map.get("reason");
 
