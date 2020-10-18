@@ -3,6 +3,7 @@ package com.kino.kreports.storage.reports;
 import com.kino.kore.utils.files.YMLFile;
 import com.kino.kore.utils.storage.Storage;
 import com.kino.kreports.models.reports.Report;
+import com.eatthepath.uuid.FastUUID;
 import org.bukkit.configuration.ConfigurationSection;
 import team.unnamed.inject.Inject;
 import team.unnamed.inject.name.Named;
@@ -33,18 +34,18 @@ public class ReportStorageManager implements Storage<UUID, Report> {
 
     @Override
     public Optional<Report> findFromData(UUID uuid) {
-        if (!reportsData.contains("reports." + uuid.toString())) {
+        if (!reportsData.contains("reports." + FastUUID.toString(uuid))) {
             return Optional.empty();
         }
 
-        Object o = reportsData.get("reports." + uuid.toString());
+        Object o = reportsData.get("reports." + FastUUID.toString(uuid));
 
         if (o instanceof Map) {
             return Optional.of(new Report((Map<String, Object>) o));
         } else if (o instanceof ConfigurationSection) {
             return Optional.of(
                     new Report(
-                            reportsData.getConfigurationSection("reports." + uuid.toString()).getValues(false)
+                            reportsData.getConfigurationSection("reports." + FastUUID.toString(uuid)).getValues(false)
                     )
             );
         } else {
@@ -55,7 +56,7 @@ public class ReportStorageManager implements Storage<UUID, Report> {
     @Override
     public void save(UUID uuid) {
         find(uuid).ifPresent(report -> {
-            reportsData.set("reports." + uuid.toString(), report.serialize());
+            reportsData.set("reports." + FastUUID.toString(uuid), report.serialize());
             reportsData.save();
 
             remove(uuid);
@@ -64,7 +65,7 @@ public class ReportStorageManager implements Storage<UUID, Report> {
 
     @Override
     public void saveObject(UUID key, Report value) {
-        reportsData.set("reports." + key.toString(), value.serialize());
+        reportsData.set("reports." + FastUUID.toString(key), value.serialize());
         reportsData.save();
 
         remove(key);
@@ -91,7 +92,7 @@ public class ReportStorageManager implements Storage<UUID, Report> {
             return;
         }
 
-        reportsData.getConfigurationSection("reports").getKeys(false).forEach(s -> findFromData(UUID.fromString(s)).ifPresent(report -> add(UUID.fromString(s), report)));
+        reportsData.getConfigurationSection("reports").getKeys(false).forEach(s -> findFromData(FastUUID.parseUUID(s)).ifPresent(report -> add(FastUUID.parseUUID(s), report)));
 
     }
 
