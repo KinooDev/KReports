@@ -6,6 +6,7 @@ import com.kino.kore.utils.storage.Storage;
 import com.kino.kreports.models.reports.Report;
 import com.kino.kreports.models.user.Staff;
 import com.kino.kreports.models.user.User;
+import com.eatthepath.uuid.FastUUID;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -42,11 +43,11 @@ public class ReportUtils {
         List<String> formatter = messages.getStringList("report.format.info");
 
         for (String sReportUUID : reportsData.getConfigurationSection("reports").getKeys(false)) {
-            UUID uuid = UUID.fromString(sReportUUID);
+            UUID uuid = FastUUID.parseUUID(sReportUUID);
             if (reportStorage.findFromData(uuid).isPresent()) {
                 if (reportStorage.findFromData(uuid).get().equals(report)) {
                     formatter.replaceAll(s -> ChatColor.translateAlternateColorCodes('&', s.replace(
-                            "<uuid>", uuid.toString()
+                            "<uuid>", FastUUID.toString(uuid)
                     ).replace(
                             "<date>", new SimpleDateFormat("MMM dd,yyyy HH:mm").format(report.getDate())
                     ).replace(
@@ -120,7 +121,7 @@ public class ReportUtils {
         List<Report> list = new ArrayList<>();
 
         for (String sReportUUID : reportsData.getConfigurationSection("reports").getKeys(false)) {
-            UUID reportUUID = UUID.fromString(sReportUUID);
+            UUID reportUUID = FastUUID.parseUUID(sReportUUID);
             if (reportStorage.findFromData(reportUUID).isPresent()) {
                 Report report = reportStorage.findFromData(reportUUID).get();
                 if (report.getReported().equals(p.getUniqueId())) {
@@ -166,7 +167,7 @@ public class ReportUtils {
         }
 
         MessageUtils.sendMessage(receiver, messages.getString("report.format.comments.header").replace(
-                "<report>", uuid.toString()).replace(
+                "<report>", FastUUID.toString(uuid)).replace(
                 "<comments>", comments));
     }
 
@@ -234,40 +235,40 @@ public class ReportUtils {
     public void changePriority (CommandSender sender, Report report, ReportPriority reportPriority, UUID uuid) {
         ReportPriority old = report.getPriority();
         report.setPriority(reportPriority);
-        MessageUtils.sendMessage(sender, messages.getString("report.changePriority").replace("<uuid>", uuid.toString()).replace("<priority>",
+        MessageUtils.sendMessage(sender, messages.getString("report.changePriority").replace("<uuid>", FastUUID.toString(uuid)).replace("<priority>",
                 old.name()).replace("<newpriority>", reportPriority.name()));
     }
 
     public void changeState (CommandSender sender, Report report, ReportState state, UUID uuid) {
         ReportPriority old = report.getPriority();
         report.setState(state);
-        MessageUtils.sendMessage(sender, messages.getString("report.changeState").replace("<uuid>", uuid.toString()).replace("<state>",
+        MessageUtils.sendMessage(sender, messages.getString("report.changeState").replace("<uuid>", FastUUID.toString()).replace("<state>",
                 old.name()).replace("<newstate>", state.name()));
     }
 
     public void accept (Player p, Report report, UUID uuid) {
         report.accept();
         report.setAccepter(p.getUniqueId());
-        MessageUtils.sendMessage(p, messages.getString("report.accept").replace("<uuid>", uuid.toString()));
+        MessageUtils.sendMessage(p, messages.getString("report.accept").replace("<uuid>", FastUUID.toString(uuid)));
     }
 
     public void unaccept (Player p, Report report, UUID uuid) {
         report.unaccept();
         report.setAccepter(null);
-        MessageUtils.sendMessage(p, messages.getString("report.unaccept").replace("<uuid>", uuid.toString()));
+        MessageUtils.sendMessage(p, messages.getString("report.unaccept").replace("<uuid>", FastUUID.toString(uuid)));
     }
 
     public void addInspector (Player p, Report report, UUID uuid) {
         for (UUID uuid1 : getAllReports().keySet()) {
             if (getAllReports().get(uuid1).getStaffInspection().contains(p.getUniqueId())) {
-                MessageUtils.sendMessage(p, messages.getString("report.inspection.alreadyInspecting").replace("<uuid>", uuid1.toString()));
+                MessageUtils.sendMessage(p, messages.getString("report.inspection.alreadyInspecting").replace("<uuid>", FastUUID.toString(uuid1)));
                 return;
             }
         }
 
         if (config.getInt("reports.maxInspectors") !=-1) {
             if (report.getStaffInspection().size() >= config.getInt("reports.maxInspectors")) {
-                MessageUtils.sendMessage(p, messages.getString("report.inspection.maxInspectorsReached").replace("<uuid>", uuid.toString()));
+                MessageUtils.sendMessage(p, messages.getString("report.inspection.maxInspectorsReached").replace("<uuid>", FastUUID.toString(uuid)));
                 return;
             }
         }
@@ -276,16 +277,16 @@ public class ReportUtils {
         if ((Bukkit.getPlayer(report.getReported()) !=null) && (Bukkit.getPlayer(report.getReported()).isOnline())) {
             p.teleport(Bukkit.getPlayer(report.getReported()).getLocation());
         }
-        MessageUtils.sendMessage(p, messages.getString("report.inspection.nowInspecting").replace("<uuid>", uuid.toString()));
+        MessageUtils.sendMessage(p, messages.getString("report.inspection.nowInspecting").replace("<uuid>", FastUUID.toString(uuid)));
     }
 
     public void removeInspector (Player p, Report report, UUID uuid) {
 
         if (report.getStaffInspection().contains(p.getUniqueId())) {
             report.removeInspector(p.getUniqueId());
-            MessageUtils.sendMessage(p, messages.getString("report.inspection.stopInspecting").replace("<uuid>", uuid.toString()));
+            MessageUtils.sendMessage(p, messages.getString("report.inspection.stopInspecting").replace("<uuid>", FastUUID.toString(uuid)));
         } else {
-            MessageUtils.sendMessage(p, messages.getString("report.inspection.notInspecting").replace("<uuid>", uuid.toString()));
+            MessageUtils.sendMessage(p, messages.getString("report.inspection.notInspecting").replace("<uuid>", FastUUID.toString(uuid)));
         }
 
     }
@@ -297,7 +298,7 @@ public class ReportUtils {
 
     public UUID fromReport (Report report) {
         for (String sReportUUID : reportsData.getConfigurationSection("reports").getKeys(false)) {
-            UUID reportUUID = UUID.fromString(sReportUUID);
+            UUID reportUUID = FastUUID.parseUUID(sReportUUID);
             if (reportStorage.findFromData(reportUUID).isPresent()) {
                 Report report1 = reportStorage.findFromData(reportUUID).get();
                 if (report.equals(report1)) {
@@ -312,7 +313,7 @@ public class ReportUtils {
     public Map<UUID, Report> getAllReports () {
         Map<UUID, Report> reports = new HashMap<>();
         for (String sReportUUID : reportsData.getConfigurationSection("reports").getKeys(false)) {
-            UUID uuid = UUID.fromString(sReportUUID);
+            UUID uuid = FastUUID.parseUUID(sReportUUID);
             if (reportStorage.findFromData(uuid).isPresent()) {
                 reports.put(uuid, reportStorage.findFromData(uuid).get());
             }
