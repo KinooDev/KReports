@@ -6,6 +6,7 @@ import com.kino.kore.utils.storage.Storage;
 import com.kino.kreports.models.user.SimpleUser;
 import com.kino.kreports.models.user.Staff;
 import com.kino.kreports.models.user.User;
+import com.eatthepath.uuid.FastUUID;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import team.unnamed.inject.Inject;
@@ -37,11 +38,11 @@ public class UserStorageManager implements Storage<UUID, User> {
 
     @Override
     public Optional<User> findFromData(UUID uuid) {
-        if (!playerData.contains("users." + uuid.toString())) {
+        if (!playerData.contains("users." + FastUUID.toString(uuid))) {
             return Optional.empty();
         }
 
-        Object o = playerData.get("users." + uuid.toString());
+        Object o = playerData.get("users." + FastUUID.toString(uuid));
 
         if (o instanceof Map) {
             Map<String, Object> map = (Map<String, Object>) o;
@@ -54,13 +55,13 @@ public class UserStorageManager implements Storage<UUID, User> {
             if(((ConfigurationSection) o).contains("staff")) {
                 return Optional.of(
                         new Staff(
-                                playerData.getConfigurationSection("users." + uuid.toString())
+                                playerData.getConfigurationSection("users." + FastUUID.toString(uuid))
                         )
                 );
             } else {
                 return Optional.of(
                         new SimpleUser(
-                                playerData.getConfigurationSection("users." + uuid.toString()).getValues(false)
+                                playerData.getConfigurationSection("users." + FastUUID.toString(uuid)).getValues(false)
                         )
                 );
             }
@@ -72,7 +73,7 @@ public class UserStorageManager implements Storage<UUID, User> {
     @Override
     public void save(UUID uuid) {
         find(uuid).ifPresent(user -> {
-            playerData.set("users." + uuid.toString(), user.serialize());
+            playerData.set("users." + FastUUID.toString(uuid), user.serialize());
             playerData.save();
 
             remove(uuid);
@@ -81,7 +82,7 @@ public class UserStorageManager implements Storage<UUID, User> {
 
     @Override
     public void saveObject(UUID key, User value) {
-        playerData.set("users." + key.toString(), value.serialize());
+        playerData.set("users." + FastUUID.toString(key), value.serialize());
         playerData.save();
 
         remove(key);
